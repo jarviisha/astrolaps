@@ -1,0 +1,36 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Astro specific
+.astro/
+
+# Environment variables
+.env
+.env.*  # ví dụ: .env.local, .env.production
+
+# Vite cache (Astro uses Vite)
+.vite/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Optional: nếu bạn dùng các tool như vercel, netlify, docker...
+.vercel/
+.netlify/
+*.local

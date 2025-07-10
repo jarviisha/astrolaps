@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Six+Caps&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&display=swap');
+@import "tailwindcss";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+  color: #182433;
+  box-sizing: border-box;
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.4285714286;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+  font-size: 16px;
+  font-optical-sizing: auto;
+  /* Or none */
+  /* background-color: white; */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+@theme{
+  --font-header: 'Six Caps', sans-serif;
+  --font-script: 'Corinthia', cursive;
+  --font-code: 'Fira Code', monospace;
+  --color-primary: #FF3B30;
+}

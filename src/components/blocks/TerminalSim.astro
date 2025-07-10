@@ -1,0 +1,52 @@
+---
+
+---
+
+<div class="terminal" id="terminal">
+  <!-- <div class="w-full border-b text-white mb-2">Termiearth</div> -->
+</div>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const commands = ["mkdir mylife", "cd mylife", "nvim ."];
+
+    const terminal = document.getElementById("terminal");
+    let currentLine = document.createElement("div");
+    currentLine.className = "line";
+    console.log(currentLine);
+    terminal.appendChild(currentLine);
+
+    let cmdIndex = 0;
+    let charIndex = 0;
+
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    currentLine.appendChild(cursor);
+
+    function type() {
+      if (cmdIndex >= commands.length) {
+        cursor.remove(); // remove cursor after done
+        return;
+      }
+
+      const currentCommand = commands[cmdIndex];
+
+      if (charIndex < currentCommand.length) {
+        currentLine.textContent += currentCommand[charIndex];
+        currentLine.appendChild(cursor);
+        charIndex++;
+        setTimeout(type, 100);
+      } else {
+        currentLine = document.createElement("div");
+        currentLine.className = "line";
+        terminal.appendChild(currentLine);
+        currentLine.appendChild(cursor);
+        cmdIndex++;
+        charIndex = 0;
+        setTimeout(type, 400);
+      }
+    }
+
+    type();
+  });
+</script>

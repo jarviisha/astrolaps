@@ -1,0 +1,70 @@
+---
+const text = "@jarviisha";
+---
+
+<section id="welcome" class="h-screen w-full flex justify-center relative">
+  <div
+    id="fade-overlay"
+    class="absolute inset-0 h-[200vh] pointer-events-none -z-10"
+  >
+  </div>
+  <div
+    class="absolute -z-20 select-none h-[200vh] pointer-events-none inset-0 bg-black"
+  >
+    <img src="/bg.jpeg" alt="" class="h-full w-full object-cover" />
+  </div>
+  <div id="rubik-cube" class="w-1/2 absolute right-1 top-2 z-5"></div>
+  <div class="container mx-auto h-full flex pt-36">
+    <div class="flex z-50 w-full">
+      <div class="flex flex-col w-full gap-4">
+        <div
+          class="z-10 leading-none font-header text-white text-[240px] floating-text tracking-tight pb-4"
+        >
+          <span>
+            great
+            <span class="">software </span><br />
+            is not just built, it's <span class="">crafted!</span>
+          </span>
+        </div>
+        <div class="flex w-full z-50 pl-2 items-center">
+          <a href="" class="text-white text-2xl rounded-full px-6 py-4 border">
+            Let's talk
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/rubik.js"></script>
+
+  <style>
+    #rubik-cube canvas {
+      background: transparent !important;
+    }
+  </style>
+</section>
+<style>
+  #fade-overlay {
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.2) 20%,
+      rgba(0, 0, 0, 0.6) 40%,
+      rgba(0, 0, 0, 0.6) 60%,
+      rgba(0, 0, 0, 0.9) 80%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+  }
+</style>
+<script type="module">
+  window.addEventListener("scroll", () => {
+    const overlay = document.getElementById("fade-overlay");
+    const maxHeight = window.innerHeight; // 100vh
+
+    const scrollY = window.scrollY;
+    const opacity = Math.min(scrollY / maxHeight, 1); // Cuộn 0 → 100vh → opacity 0 → 1
+
+    overlay.style.opacity = opacity;
+  });
+</script>
