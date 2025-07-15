@@ -1,7 +1,99 @@
-<section id="skill" class="w-full">
-  <div
-    class="container pb-40 text- flex justify-center mx-auto h-full text-white"
-  >
-    <h1 class="text-[420px] font-header">COMING SOON</h1>
+---
+import SkillCard from "./blocks/SkillCard.astro";
+---
+
+<section id="skill" class="w-full pt-20">
+  <div class="container justify-center mx-auto h-full text-white">
+    <div class="relative">
+      <h1 class="text-9xl font-header">my-skills</h1>
+    </div>
+    <div class="grid grid-cols-12 gap-2 w-full">
+      <div class="flex gap-8 relative justify-end col-start-5 col-end-13">
+        <div class="h-[600px] -z-10 w-96 absolute top-0 right-0">
+          <img src="/banhrang.jpeg" alt="" class="h-full w-full object-cover" />
+          <div class="absolute top-0 bg-black/60 w-full h-full"></div>
+        </div>
+        <div class="p-4">
+          <h2 class="text-4xl mb-4 font-bold">BACKEND DEVELOPER</h2>
+          <p class="mb-6">
+            I specialize in backend development with a strong focus on
+            performance, scalability, and clean architecture. My primary stack
+            includes
+          </p>
+          <div class="flex gap-12">
+            <div>
+              <div>
+                <h3 class="text-xl font-code font-bold">
+                  #LANGUAGES AND FRAMEWORKS
+                </h3>
+                <SkillCard
+                  icons={["/icons/golang.svg"]}
+                  title="Golang"
+                  content="High-performance APIs, concurrency, gRPC services"
+                />
+                <SkillCard
+                  icons={["/icons/dotnet.svg", "/icons/csharp.svg"]}
+                  title=".NET with C#"
+                  content="RESTful APIs, business logic layers, Entity Framework"
+                />
+              </div>
+            </div>
+            <div>
+              <div>
+                <span class="text-xl font-bold font-code">#DATABASE</span>
+                <SkillCard
+                  icons={["/icons/sqlserver.svg", "/icons/pgsql.svg"]}
+                  title="SQLServer & PostgreSQL"
+                  content="Relational schema design, stored procedures, query optimization, indexing"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-8 relative col-span-12 mt-36">
+        <div class="p-4">
+          <div class="h-[500px] -z-10 w-96 absolute top-0 left-0">
+            <img src="/tower.jpeg" alt="" class="h-full w-full object-cover" />
+            <div class="absolute top-0 bg-black/70 w-full h-full"></div>
+          </div>
+          <h2 class="text-4xl mb-4 font-bold">FRONTEND DEVELOPER</h2>
+          <p class="mb-6">
+            I specialize in backend development with a strong focus on
+            performance, scalability, and clean architecture. My primary stack
+            includes
+          </p>
+          <div class="flex gap-12">
+            <div class="w-2/3">
+              <div>
+                <span class="text-xl font-code font-bold"
+                  >#LANGUAGES AND FRAMEWORKS</span
+                >
+                <SkillCard
+                  icons={[
+                    "/icons/html-5.svg",
+                    "/icons/css-3.svg",
+                    "/icons/javascript.svg",
+                  ]}
+                  title="HTML | CSS | JavaScript"
+                  content="I’m comfortable working with HTML5, CSS3, and Vanilla JavaScript to create responsive, accessible, and user-friendly interfaces. I understand core frontend principles such as DOM manipulation, responsive layouts (Flexbox/Grid), and API "
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="w-full relative mt-96">
+      <p class="text-8xl font-script z-10">
+        The beauty of code lies not in flashy syntax or elaborate architecture,
+        but in the eyes of a passionate developer – the one who sees elegance
+        hidden within the logic.
+      </p>
+      <div class="absolute -bottom-96 right-0 -z-10">
+        <img src="/gril.png" alt="" />
+      </div>
+    </div> -->
+    <!-- <h1 class="text-[420px] font-header">COMING SOON</h1> -->
   </div>
 </section>

@@ -1,0 +1,37 @@
+<!-- Background fixed -->
+<div
+  class="fixed top-0 left-0 w-full h-screen -z-10 bg-black transition-opacity duration-1000 ease-out"
+  id="globalBackground"
+  style="background-image: url('/michelangelo-creation-of-adam.jpg'); background-size: cover; background-position: center; background-attachment: fixed; opacity: 0;"
+>
+</div>
+
+<!-- Section vén màn -->
+<section class="h-screen w-full relative mt-20" id="curtainTrigger">
+  <div
+    class="flex absolute h-full text-[360px] leading-none font-header text-white z-10 items-end"
+  >
+    <span>
+      LET'S<br />TALK NOW
+    </span>
+  </div>
+</section>
+
+<script type="module">
+  const background = document.getElementById("globalBackground");
+  const trigger = document.getElementById("curtainTrigger");
+
+  window.addEventListener("scroll", () => {
+    const triggerTop = trigger.offsetTop;
+    const triggerHeight = trigger.offsetHeight;
+    const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+
+    // Tính khoảng cuộn vào vùng hiển thị
+    const distance = scrollY + windowHeight - triggerTop;
+    const revealAmount = Math.min(Math.max(distance / triggerHeight, 0), 1);
+
+    // Cập nhật độ mờ dần của background
+    background.style.opacity = revealAmount;
+  });
+</script>

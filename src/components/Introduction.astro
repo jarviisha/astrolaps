@@ -1,6 +1,13 @@
-<section class="relative okx h-screen text-white bg-transparent" id="introduction">
+---
+import TechBanner from "./blocks/TechBanner.astro";
+---
+
+<section class="relative okx text-white bg-transparent" id="introduction">
+  <div class="absolute justify-center bottom-0 left-0 font-header flex h-full w-full items-end text-[650px] opacity-10 leading-none inset-0 text-white -z-10">
+    CODING IS LIFE
+  </div>
   <!-- <div class="absolute top-[80vh] left-0 w-full h-40 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none"></div> -->
-  <div class="flex h-full inset-0">
+  <div class="flex inset-0 mb-40">
     <div class="flex mt-28 container mx-auto justify-between">
       <div class="w-[600px] h-[600px] relative">
         <!-- <TechOrbit /> -->
@@ -29,7 +36,7 @@
           </h2>
           <div class="pl-40">
             <p class="text-4xl px-4 py-2 mb-4">
-              Hello! I'm <span class="text-primary font-script text-8xl font-bold"
+              Hello! I'm <span class="text-primary font-script text-9xl font-bold"
                 >Jarviisha</span
               >
             </p>
@@ -48,5 +55,6 @@
       </div>
     </div>
   </div>
+  <TechBanner />
   <script src="../scripts/coderain.js"></script>
 </section>

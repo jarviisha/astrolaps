@@ -1,0 +1,135 @@
+---
+// CircularText.astro
+export interface Props {
+  texts: string[];
+  radius?: number;
+  fontSize?: string;
+  duration?: number;
+  direction?: 'clockwise' | 'counterclockwise';
+  className?: string;
+}
+
+const { 
+  texts, 
+  radius = 150, 
+  fontSize = '16px', 
+  duration = 20, 
+  direction = 'clockwise',
+  className = ''
+} = Astro.props;
+
+const containerSize = (radius + 50) * 2;
+---
+
+<div class={`circular-text-container ${className}`}>
+  <div class="circular-text-wrapper">
+    {texts.map((text, index) => {
+      const angle = (360 / texts.length) * index;
+      const rotateDirection = direction === 'clockwise' ? angle : -angle;
+      
+      return (
+        <span 
+          class="circular-text-item"
+          style={{
+            transform: `rotate(${rotateDirection}deg) translateY(-${radius}px) rotate(${direction === 'clockwise' ? -rotateDirection : rotateDirection}deg)`,
+            fontSize: fontSize
+          }}
+        >
+          {text}
+        </span>
+      );
+    })}
+  </div>
+</div>
+
+<style define:vars={{ 
+  containerSize: `${containerSize}px`, 
+  duration: `${duration}s`,
+  rotateDirection: direction === 'clockwise' ? '360deg' : '-360deg'
+}}>
+  .circular-text-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--containerSize);
+    height: var(--containerSize);
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .circular-text-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    animation: rotate var(--duration) linear infinite;
+  }
+
+  .circular-text-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
+    white-space: nowrap;
+    font-weight: 500;
+    color: #333;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .circular-text-item:hover {
+    color: #007acc;
+    transform: scale(1.1);
+    font-weight: 600;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(var(--rotateDirection));
+    }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .circular-text-container {
+      width: calc(var(--containerSize) * 0.8);
+      height: calc(var(--containerSize) * 0.8);
+    }
+    
+    .circular-text-item {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .circular-text-container {
+      width: calc(var(--containerSize) * 0.6);
+      height: calc(var(--containerSize) * 0.6);
+    }
+    
+    .circular-text-item {
+      font-size: 12px;
+    }
+  }
+</style>
+
+<script type="module">
+  // Thêm hiệu ứng tạm dừng khi hover vào container
+  document.addEventListener('DOMContentLoaded', () => {
+    const containers = document.querySelectorAll('.circular-text-container');
+    
+    containers.forEach(container => {
+      const wrapper = container.querySelector('.circular-text-wrapper');
+      
+      container.addEventListener('mouseenter', () => {
+        wrapper.style.animationPlayState = 'paused';
+      });
+      
+      container.addEventListener('mouseleave', () => {
+        wrapper.style.animationPlayState = 'running';
+      });
+    });
+  });
+</script>

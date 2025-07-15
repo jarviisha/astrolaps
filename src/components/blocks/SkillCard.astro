@@ -1,0 +1,39 @@
+---
+interface Props {
+  icons: string[];
+  title: string;
+  content: string;
+}
+
+const { icons, title, content } = Astro.props as Props;
+---
+
+<div>
+  <div class="flex gap-3 py-2 items-center">
+    <!-- Icon stack dùng flex và -ml -->
+    <div class="flex items-center">
+      {
+        icons.map((src: string, index: number) => (
+          <div
+            class={`w-10 h-10 bg-white p-1 rounded-full border-2 border-yellow-500 ${
+              index !== 0 ? "-ml-2" : ""
+            }`}
+          >
+            <img
+              src={src}
+              alt=""
+              class="w-full h-full object-cover rounded-full"
+            />
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Text -->
+    <div>
+      <h3>{title}</h3>
+      <!-- <p class="text-sm text-gray-300">{content}</p> -->
+    </div>
+  </div>
+  <p class="text-sm text-gray-300">{content}</p>
+</div>
