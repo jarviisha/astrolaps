@@ -16,17 +16,17 @@ const rows = [
 ---
 
 <div class="w-full h-[200px] flex flex-col relative overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent z-10" style="animation: shine 3s linear infinite;"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent z-10 shine-animation"></div>
 
   {rows.map((items, rowIndex) => (
     <div class="flex items-center h-1/3 z-20">
       <div
-        class="flex gap-6 whitespace-nowrap"
-        style={`animation: ${rowIndex % 2 === 0 ? 'scroll-right' : 'scroll-left'} ${35 + rowIndex * 5}s linear infinite;`}
+        class={`flex gap-6 whitespace-nowrap ${rowIndex % 2 === 0 ? 'scroll-right' : 'scroll-left'}`}
+        style={`animation-duration: ${35 + rowIndex * 5}s;`}
       >
         {[...items, ...items].map((item, idx) => (
           <div
-            class="min-w-[120px] text-center text-white font-bold px-5 py-2 border-2 border-white/20 bg-white/10 backdrop-blur-md shadow hover:-translate-y-1 transition-all"
+            class="min-w-[120px] text-center text-white font-bold px-5 py-2 border-2 border-white/20 bg-white/10 shadow tech-item"
           >
             {item}
           </div>
@@ -36,32 +36,63 @@ const rows = [
   ))}
 </div>
 
-
 <style scoped>
+.shine-animation {
+  animation: shine 3s linear infinite;
+}
+
+.scroll-left {
+  animation: scroll-left linear infinite;
+}
+
+.scroll-right {
+  animation: scroll-right linear infinite;
+}
+
+.tech-item {
+  will-change: transform;
+  transition: transform 0.2s ease;
+}
+
+.tech-item:hover {
+  transform: translate3d(0, -4px, 0);
+}
+
 @keyframes shine {
   0% {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
   }
   100% {
-    transform: translateX(100%);
+    transform: translate3d(100%, 0, 0);
   }
 }
 
 @keyframes scroll-left {
   0% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
   100% {
-    transform: translateX(0%);
+    transform: translate3d(0%, 0, 0);
   }
 }
 
 @keyframes scroll-right {
   0% {
-    transform: translateX(0%);
+    transform: translate3d(0%, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Tối ưu performance cho mobile */
+@media (max-width: 768px) {
+  .shine-animation {
+    animation: none;
+  }
+  
+  .tech-item {
+    backdrop-filter: none;
   }
 }
 </style>
