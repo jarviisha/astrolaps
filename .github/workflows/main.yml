@@ -31,5 +31,5 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_KEY }}
           source: "dist/*"
-          target: "/root/webprojects/portfolio-astro/dist"
+          target: "/var/www/portfolio-astro/dist"
           strip_components: 1
