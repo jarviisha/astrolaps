@@ -121,23 +121,23 @@ const formFields = [
 ];
 ---
 
+<link rel="preload" as="image" href="/michelangelo-creation-of-adam.jpg" />
+
 <!-- Background fixed -->
 <div
   class="fixed top-0 left-0 w-full h-screen -z-50 bg-black transition-opacity duration-1000 ease-out"
   id="globalBackground"
   style="background-image: url('/michelangelo-creation-of-adam.jpg'); background-size: cover; background-position: center; background-attachment: fixed; opacity: 0;"
->
-</div>
+></div>
 <div
   class="fixed bg-gradient-to-b from-black/50 to-black/90 z-[-40] w-full h-screen top-0 left-0"
->
-</div>
+></div>
 
 <!-- Contact Section -->
 <section class="h-screen w-full relative mt-96" id="curtainTrigger">
   <!-- Header Text -->
   <div
-    class="flex pl-16 h-[500px] text-[500px] leading-none font-header text-white z-10 items-center"
+    class="flex pl-16 h-[300px] text-[400px] leading-none font-header text-white z-10 items-center"
   >
     <span class="leading-none flex items-center text-white/80">
       LET'S<br />TALK NOW
@@ -155,6 +155,7 @@ const formFields = [
           <div
             class={`absolute ${card.position} ${card.size} bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-6 transform ${card.rotation} hover:rotate-0 hover:z-50 shadow-2xl ${card.hoverColor}`}
             data-contact={card.id}
+            style="contain: layout paint"
           >
             <div class="flex items-center space-x-5">
               <svg
@@ -227,7 +228,6 @@ const formFields = [
 </section>
 
 <script type="module">
-  // Optimized scroll handler with throttling
   let ticking = false;
 
   function updateScrollEffects() {
@@ -242,14 +242,10 @@ const formFields = [
     const scrollY = window.scrollY;
     const windowHeight = window.innerHeight;
 
-    // Calculate reveal amount
     const distance = scrollY + windowHeight - triggerTop;
     const revealAmount = Math.min(Math.max(distance / triggerHeight, 0), 1);
 
-    // Update background opacity
     background.style.opacity = revealAmount.toString();
-
-    // Animate form appearance
     contactForm.style.transform =
       revealAmount > 0.3 ? "translateY(0)" : "translateY(100%)";
 
@@ -263,10 +259,8 @@ const formFields = [
     }
   }
 
-  // Throttled scroll event
   window.addEventListener("scroll", requestTick, { passive: true });
 
-  // Add click handlers for contact cards
   document.addEventListener("DOMContentLoaded", () => {
     const contactCards = document.querySelectorAll("[data-contact]");
 
@@ -275,7 +269,6 @@ const formFields = [
         const contactType = card.dataset.contact;
         const link = card.querySelector("p").textContent;
 
-        // Handle different contact types
         switch (contactType) {
           case "gmail":
             window.open(`mailto:${link}`, "_blank");
@@ -292,7 +285,7 @@ const formFields = [
           case "twitter":
             window.open(
               `https://twitter.com/${link.replace("@", "")}`,
-              "_blank",
+              "_blank"
             );
             break;
           default:
@@ -301,26 +294,18 @@ const formFields = [
       });
     });
 
-    // Form submission handler
     const form = document.getElementById("contactForm");
     form?.addEventListener("submit", (e) => {
       e.preventDefault();
-
-      // Get form data
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
-
-      // Here you would typically send the data to your backend
       console.log("Form submitted:", data);
-
-      // Show success message (you can customize this)
       alert("Message sent successfully!");
     });
   });
 </script>
 
 <style>
-  /* Optimize CSS for better performance */
   #globalBackground {
     will-change: opacity;
   }
@@ -331,10 +316,16 @@ const formFields = [
 
   [data-contact] {
     will-change: transform;
+    contain: layout paint;
   }
 
-  /* Preload hover states for better performance */
   [data-contact]:hover {
     transform-origin: center center;
+  }
+
+  @media (max-width: 768px) {
+    #globalBackground {
+      background-attachment: scroll;
+    }
   }
 </style>

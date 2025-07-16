@@ -29,6 +29,7 @@ body {
 
 @theme{
   --font-header: 'Six Caps', sans-serif;
+  /* --font-header: 'Cinzel', serif; */
   --font-script: 'Corinthia', cursive;
   --font-code: 'Fira Code', monospace;
   --color-primary: #FF3B30;

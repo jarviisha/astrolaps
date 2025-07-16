@@ -1,4 +1,10 @@
 <section id="welcome" class="relative flex h-screen w-full justify-center">
+  <!-- Loading screen -->
+  <div
+    id="loading-screen"
+    class="fixed inset-0 z-[100] bg-black"
+  ></div>
+  
   <!-- Fade overlay for scroll effect -->
   <div
     id="fade-overlay"
@@ -8,30 +14,31 @@
   <!-- Background image -->
   <div class="pointer-events-none absolute inset-0 -z-20 h-[200vh] select-none bg-black">
     <img 
+      id="bg-image"
       src="/bg.jpeg" 
       alt="Background" 
-      class="h-full w-full object-cover"
+      class="h-full w-full object-cover opacity-0"
       loading="eager"
       fetchpriority="high"
     />
   </div>
   
   <!-- Rubik cube -->
-  <div id="rubik-cube" class="absolute right-1 top-2 z-10 w-1/2"></div>
+  <div id="rubik-cube" class="absolute right-1 bottom-16 z-10 w-1/2 opacity-0"></div>
   
   <!-- Main content -->
   <div class="container mx-auto flex h-full pt-36">
     <div class="z-50 flex w-full">
       <div class="flex w-full flex-col gap-4">
         <!-- Hero text -->
-        <h1 class="floating-text z-10 pb-4 font-header text-[240px] leading-none tracking-tight text-white">
-          great
-          <span class="highlighted-text">software</span><br />
-          is not just built, it's <span class="highlighted-text">crafted!</span>
+        <h1 id="hero-text" class="floating-text z-10 pb-4 font-header text-[280px] leading-none tracking-tight text-white opacity-0">
+          <span id="text-line-1">great</span>
+          <span id="text-highlight-1" class="highlighted-text">software</span><br />
+          <span id="text-line-2">is not just built, it's</span> <span id="text-highlight-2" class="highlighted-text">crafted!</span>
         </h1>
         
         <!-- CTA button -->
-        <div class="z-50 flex w-full items-center pl-2">
+        <div id="cta-button" class="z-50 flex w-full items-center pl-2 opacity-0">
           <a 
             href="#contact" 
             class="rounded-full border px-6 py-4 text-2xl text-white transition-all duration-300 hover:bg-white hover:text-black"
@@ -51,7 +58,7 @@
   #fade-overlay {
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.5) 20%,
+      rgba(0, 0, 0, 0.4) 10%,
       rgba(0, 0, 0, 0.5) 40%,
       rgba(0, 0, 0, 0.7) 60%,
       rgba(0, 0, 0, 0.9) 80%,
@@ -61,6 +68,118 @@
 
 
 </style>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', () => {
+    // Create GSAP timeline
+    const tl = gsap.timeline();
+
+    // Initial state - everything hidden
+    gsap.set(['#hero-text', '#bg-image', '#rubik-cube', '#cta-button'], {
+      opacity: 0
+    });
+
+    // Animation sequence
+    tl
+      // Step 1: Keep black screen for 1 second
+      .to('#loading-screen', { duration: 0.4 })
+      
+      // Step 2: Fade out loading screen and fade in text
+      .to('#loading-screen', { 
+        opacity: 0, 
+        duration: 0.8,
+        ease: "power2.out"
+      })
+      .to('#hero-text', { 
+        opacity: 1, 
+        duration: 1.2,
+        ease: "power2.out"
+      }, "-=0.5")
+      
+      // Step 3: Animate text elements individually
+      .fromTo('#text-line-1', {
+        y: 50,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.8")
+      
+      .fromTo('#text-highlight-1', {
+        y: 50,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.6")
+      
+      .fromTo('#text-line-2', {
+        y: 50,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.6")
+      
+      .fromTo('#text-highlight-2', {
+        y: 50,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.6")
+      
+      // Step 4: Fade in background image
+      .to('#bg-image', {
+        opacity: 1,
+        duration: 1.5,
+        ease: "power2.out"
+      }, "-=0.3")
+      
+      // Step 5: Fade in rubik cube with scale animation
+      .fromTo('#rubik-cube', {
+        opacity: 0,
+        scale: 0.8,
+        rotation: -10
+      }, {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 1.2,
+        ease: "back.out(1.7)"
+      }, "-=0.8")
+      
+      // Step 6: Fade in CTA button
+      .fromTo('#cta-button', {
+        opacity: 0,
+        y: 20
+      }, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }, "-=0.5");
+
+    // Remove loading screen from DOM after animation
+    tl.call(() => {
+      const loadingScreen = document.getElementById('loading-screen');
+      if (loadingScreen) {
+        loadingScreen.remove();
+      }
+    });
+  });
+</script>
 
 <script type="module">
   // Optimized scroll handler with throttling
