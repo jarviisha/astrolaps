@@ -2,26 +2,41 @@
 import SkillCard from "./blocks/SkillCard.astro";
 ---
 
-<section id="skill" class="w-full pt-20">
+<section id="skill" class="w-full pt-20 pb-32">
   <div class="container justify-center mx-auto h-full text-white">
-    <div class="relative">
-      <h1 class="text-9xl font-header">my-skills</h1>
+    <!-- Header với GPU acceleration -->
+    <div class="relative will-change-transform">
+      <h1 class="text-9xl font-header transform-gpu">my-skills</h1>
     </div>
+    
     <div class="grid grid-cols-12 gap-2 w-full">
+      <!-- Backend Section với optimized images -->
       <div class="flex gap-8 relative justify-end col-start-5 col-end-13">
-        <div class="h-[800px] -z-10 w-[640px] absolute -top-20 -right-44">
-          <img src="/banhrang.jpeg" alt="" class="h-full w-full object-cover" />
-          <div class="absolute top-0 bg-black/60 w-full h-full"></div>
+        <!-- Optimized background image container -->
+        <div class="h-[800px] -z-10 w-[640px] absolute -top-20 -right-44 overflow-hidden">
+          <img 
+            src="/banhrang.jpeg" 
+            alt="Backend development background" 
+            class="h-full w-full object-cover transform-gpu" 
+            loading="lazy"
+            decoding="async"
+            width="640"
+            height="800"
+          />
+          <div class="absolute top-0 bg-black/60 w-full h-full pointer-events-none"></div>
         </div>
-        <div class="p-4">
+        
+        <div class="p-4 will-change-transform">
           <h2 class="text-4xl mb-4 font-bold">BACKEND DEVELOPER</h2>
           <p class="mb-6">
             I specialize in backend development with a strong focus on
             performance, scalability, and clean architecture. My primary stack
             includes
           </p>
+          
+          <!-- Optimized grid layout -->
           <div class="flex gap-12">
-            <div>
+            <div class="flex-1">
               <div>
                 <h3 class="text-xl font-code font-bold">
                   #LANGUAGES AND FRAMEWORKS
@@ -38,7 +53,8 @@ import SkillCard from "./blocks/SkillCard.astro";
                 />
               </div>
             </div>
-            <div>
+            
+            <div class="flex-1">
               <div>
                 <span class="text-xl font-bold font-code">#DATABASE</span>
                 <SkillCard
@@ -51,24 +67,34 @@ import SkillCard from "./blocks/SkillCard.astro";
           </div>
         </div>
       </div>
+      
+      <!-- Frontend Section với optimized layout -->
       <div class="flex gap-8 relative col-span-12 mt-36">
-        <div class="p-4">
-          <div class="h-[400px] -z-10 w-[800px] absolute -top-20 -left-44">
-            <img src="/tower.jpeg" alt="" class="h-full w-full object-cover" />
-            <div class="absolute top-0 bg-black/70 w-full h-full"></div>
+        <div class="p-4 w-full will-change-transform">
+          <!-- Optimized background image container -->
+          <div class="-z-10 h-[800px] w-[800px] absolute -top-20 -left-44 overflow-hidden">
+            <img 
+              src="/tower.jpeg" 
+              alt="Frontend development background" 
+              class="h-auto w-full object-cover transform-gpu" 
+              loading="lazy"
+              decoding="async"
+            />
+            <div class="absolute top-0 bg-black/70 w-full h-full pointer-events-none"></div>
           </div>
+          
           <h2 class="text-4xl mb-4 font-bold">FRONTEND DEVELOPER</h2>
           <p class="mb-6">
-            I specialize in backend development with a strong focus on
-            performance, scalability, and clean architecture. My primary stack
-            includes
+            I create modern, responsive, and accessible user interfaces with a focus on
+            performance and user experience. My frontend expertise includes
           </p>
+          
           <div class="flex gap-12">
             <div class="w-2/3">
               <div>
-                <span class="text-xl font-code font-bold"
-                  >#LANGUAGES AND FRAMEWORKS</span
-                >
+                <span class="text-xl font-code font-bold">
+                  #LANGUAGES AND FRAMEWORKS
+                </span>
                 <SkillCard
                   icons={[
                     "/icons/html-5.svg",
@@ -76,7 +102,7 @@ import SkillCard from "./blocks/SkillCard.astro";
                     "/icons/javascript.svg",
                   ]}
                   title="HTML | CSS | JavaScript"
-                  content="I’m comfortable working with HTML5, CSS3, and Vanilla JavaScript to create responsive, accessible, and user-friendly interfaces. I understand core frontend principles such as DOM manipulation, responsive layouts (Flexbox/Grid), and API "
+                  content="I'm comfortable working with HTML5, CSS3, and Vanilla JavaScript to create responsive, accessible, and user-friendly interfaces. I understand core frontend principles such as DOM manipulation, responsive layouts (Flexbox/Grid), and API integration."
                 />
               </div>
             </div>
@@ -84,16 +110,100 @@ import SkillCard from "./blocks/SkillCard.astro";
         </div>
       </div>
     </div>
-    <!-- <div class="w-full relative mt-96">
-      <p class="text-8xl font-script z-10">
-        The beauty of code lies not in flashy syntax or elaborate architecture,
-        but in the eyes of a passionate developer – the one who sees elegance
-        hidden within the logic.
-      </p>
-      <div class="absolute -bottom-96 right-0 -z-10">
-        <img src="/gril.png" alt="" />
-      </div>
-    </div> -->
-    <!-- <h1 class="text-[420px] font-header">COMING SOON</h1> -->
   </div>
 </section>
+
+<style>
+  /* GPU acceleration cho better performance */
+  #skill {
+    will-change: transform;
+    transform: translateZ(0);
+    contain: layout style paint;
+  }
+  
+  /* Optimize font rendering */
+  .font-header, .font-code {
+    font-display: swap;
+    text-rendering: optimizeLegibility;
+  }
+  
+  /* Prevent layout shifts */
+  img {
+    content-visibility: auto;
+    contain-intrinsic-size: 640px 800px;
+  }
+  
+  /* Optimize transforms */
+  .transform-gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Responsive optimizations */
+  @media (max-width: 768px) {
+    .text-9xl {
+      font-size: 4rem;
+    }
+    
+    .text-4xl {
+      font-size: 1.875rem;
+    }
+    
+    .gap-12 {
+      gap: 1.5rem;
+    }
+    
+    .h-\[800px\] {
+      height: 400px;
+    }
+    
+    .h-\[400px\] {
+      height: 300px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .flex {
+      flex-direction: column;
+    }
+    
+    .w-2\/3 {
+      width: 100%;
+    }
+  }
+</style>
+
+<script type="module">
+  // Intersection Observer cho lazy loading và animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
+        // Unobserve sau khi animated để tối ưu performance
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  // Observe skill cards với throttling
+  document.addEventListener('DOMContentLoaded', () => {
+    const skillCards = document.querySelectorAll('#skill [class*="col-"]');
+    skillCards.forEach(card => observer.observe(card));
+  });
+  
+  // Cleanup observer when page unloads
+  window.addEventListener('beforeunload', () => {
+    observer.disconnect();
+  });
+</script>

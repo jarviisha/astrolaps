@@ -2,33 +2,29 @@
 import TechBanner from "./blocks/TechBanner.astro";
 ---
 
-<section class="relative  text-white bg-transparent" id="introduction">
-  <div class="absolute justify-center bottom-0 left-0 font-header flex h-full w-full items-end text-[650px] opacity-10 leading-none inset-0 text-white -z-10">
+<section class="relative text-white bg-transparent" id="introduction">
+  <!-- Background text - optimized with will-change -->
+  <div class="absolute justify-center bottom-0 left-0 font-header flex h-full w-full items-end text-[650px] opacity-10 leading-none inset-0 text-white -z-10 will-change-transform">
     CODING IS LIFE
   </div>
-  <!-- <div class="absolute top-[80vh] left-0 w-full h-40 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none"></div> -->
+  
   <div class="flex inset-0 mb-40">
     <div class="flex mt-28 container mx-auto justify-between">
+      <!-- Image section - optimized loading -->
       <div class="w-[500px] h-[600px] relative">
-        <!-- <TechOrbit /> -->
-        <div class="w-[400px] absolute top-0 -z-10 font-code text-green-400 hidden">
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-          01010101010101010101010101010100011010100100110101
-        </div>
-        <img src="/avt.png" class="w-full h-auto " alt="" />
+        <!-- Optimized image loading -->
+        <img 
+          src="/avt.png" 
+          class="w-full h-auto" 
+          alt="Jarviisha profile" 
+          loading="lazy"
+          decoding="async"
+          width="500"
+          height="600"
+        />
       </div>
+      
+      <!-- Content section -->
       <div class="w-2/3 bg-transparent">
         <div class="border-gray-600">
           <h2 class="text-[200px] text-end leading-none font-header border-gray-600">
@@ -36,9 +32,7 @@ import TechBanner from "./blocks/TechBanner.astro";
           </h2>
           <div class="pl-40">
             <p class="text-4xl px-4 py-2 mb-4">
-              Hello! I'm <span class="text-primary font-script text-9xl font-bold"
-                >Jarviisha</span
-              >
+              Hello! I'm <span class="text-primary font-script text-9xl font-bold">Jarviisha</span>
             </p>
             <p class="text-3xl px-4 py-2 mb-4">
               I'm a software developer passionate about system architecture and
@@ -55,5 +49,25 @@ import TechBanner from "./blocks/TechBanner.astro";
       </div>
     </div>
   </div>
+  
   <TechBanner />
 </section>
+
+<style>
+  /* GPU acceleration for better performance */
+  #introduction {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+  
+  /* Optimize font rendering */
+  .font-header, .font-script {
+    font-display: swap;
+  }
+  
+  /* Prevent layout shifts */
+  img {
+    content-visibility: auto;
+    contain-intrinsic-size: 500px 600px;
+  }
+</style>

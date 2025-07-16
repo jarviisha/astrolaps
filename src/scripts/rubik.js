@@ -11,29 +11,15 @@ class RenaissanceCodingCube {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.rubikGroup = new THREE.Group();
     this.animationId = null;
+    this._destroyed = false;
 
     // Constants
     this.CUBE_SIZE = 3;
     this.SPACING = 1.1;
-    this.TEXTURE_SIZE = 128; // GIẢM từ 256 xuống 128
+    this.TEXTURE_SIZE = 256;
     this.ANIMATION_SPEED = 0.0008;
     this.PULSE_AMPLITUDE = 0.4;
-    this.TEXT_UPDATE_INTERVAL = 800; // TĂNG từ 300 lên 800ms
-
-    // Performance optimizations
-    this.isAnimating = true;
-    this.lastUpdateTime = 0;
-    this.frameCount = 0;
-    this.targetFPS = 60;
-    this.frameTime = 1000 / this.targetFPS;
-    
-    // Texture caching
-    this.textureCache = new Map();
-    this.materialCache = new Map();
-    
-    // Batch updates
-    this.pendingUpdates = [];
-    this.updateBatchSize = 3; // Chỉ update 3 texture mỗi frame
+    this.TEXT_UPDATE_INTERVAL = 300;
 
     // Renaissance coding color palette
     this.RENAISSANCE_COLORS = {
@@ -53,35 +39,127 @@ class RenaissanceCodingCube {
       sage: "#87A96B",
     };
 
+    // Renaissance coding themes
     this.CODING_THEMES = {
       code: {
-        symbols: ["{}","[]","()","<>","&&","||","==","!=","++","--","->","=>","??","::"],
+        symbols: [
+          "{}",
+          "[]",
+          "()",
+          "<>",
+          "&&",
+          "||",
+          "==",
+          "!=",
+          "++",
+          "--",
+          "->",
+          "=>",
+          "??",
+          "::",
+        ],
         colors: ["gold", "emerald", "richBlue", "bronze"],
       },
       math: {
-        symbols: ["∫","∑","∏","∆","∇","∞","≈","≠","±","√","∂","∀","∃","∈"],
+        symbols: [
+          "∫",
+          "∑",
+          "∏",
+          "∆",
+          "∇",
+          "∞",
+          "≈",
+          "≠",
+          "±",
+          "√",
+          "∂",
+          "∀",
+          "∃",
+          "∈",
+        ],
         colors: ["deepRed", "burgundy", "bronze", "gold"],
       },
       symbols: {
-        symbols: ["⚡","⚙","⚛","⚜","❋","❈","✧","◊","※","⁂","☙","❖","✦","♠"],
+        symbols: [
+          "⚡",
+          "⚙",
+          "⚛",
+          "⚜",
+          "❋",
+          "❈",
+          "✧",
+          "◊",
+          "※",
+          "⁂",
+          "☙",
+          "❖",
+          "✦",
+          "♠",
+        ],
         colors: ["crimson", "gold", "emerald", "bronze"],
       },
       alchemy: {
-        symbols: ["☿","♃","♄","♀","♂","☉","☽","🜀","🜁","🜂","🜃","🜄","△","▽"],
+        symbols: [
+          "☿",
+          "♃",
+          "♄",
+          "♀",
+          "♂",
+          "☉",
+          "☽",
+          "🜀",
+          "🜁",
+          "🜂",
+          "🜃",
+          "🜄",
+          "△",
+          "▽",
+        ],
         colors: ["copperGreen", "burgundy", "gold", "deepRed"],
       },
       geometry: {
-        symbols: ["◯","△","□","◇","⬟","⬢","⬡","⬠","⬣","⬤","⬥","⬦","⬧","⬨"],
+        symbols: [
+          "◯",
+          "△",
+          "□",
+          "◇",
+          "⬟",
+          "⬢",
+          "⬡",
+          "⬠",
+          "⬣",
+          "⬤",
+          "⬥",
+          "⬦",
+          "⬧",
+          "⬨",
+        ],
         colors: ["darkGold", "rust", "sage", "bronze"],
       },
       manuscript: {
-        symbols: ["℧","℩","℈","℞","℟","℠","℡","™","℣","ℤ","℥","Ω","℧","℩"],
+        symbols: [
+          "℧",
+          "℩",
+          "℈",
+          "℞",
+          "℟",
+          "℠",
+          "℡",
+          "™",
+          "℣",
+          "ℤ",
+          "℥",
+          "Ω",
+          "℧",
+          "℩",
+        ],
         colors: ["inkBlue", "burgundy", "bronze", "deepRed"],
       },
     };
 
     this.currentTheme = options.theme || "code";
-    this.singleCharConfig = options.singleCharConfig || this.getDefaultSingleCharConfig();
+    this.singleCharConfig =
+      options.singleCharConfig || this.getDefaultSingleCharConfig();
 
     this.init();
   }
@@ -104,11 +182,6 @@ class RenaissanceCodingCube {
     this.renderer.setSize(this.width, this.width);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    
-    // Performance optimizations
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Giới hạn pixel ratio
-    this.renderer.powerPreference = "high-performance";
-    
     this.container.appendChild(this.renderer.domElement);
   }
 
@@ -124,54 +197,13 @@ class RenaissanceCodingCube {
     };
   }
 
-  // Cached texture creation
-  getOrCreateTexture(key, createFn) {
-    if (this.textureCache.has(key)) {
-      return this.textureCache.get(key);
-    }
-    
-    const texture = createFn();
-    this.textureCache.set(key, texture);
-    return texture;
-  }
-
-  // Cached material creation
-  getOrCreateMaterial(textureKey, texture) {
-    if (this.materialCache.has(textureKey)) {
-      return this.materialCache.get(textureKey);
-    }
-    
-    const material = new THREE.MeshLambertMaterial({
-      map: texture,
-      transparent: true,
-      side: THREE.DoubleSide,
-    });
-    
-    this.materialCache.set(textureKey, material);
-    return material;
-  }
-
+  // Public methods for theme management
   setTheme(themeName) {
     if (this.CODING_THEMES[themeName]) {
       this.currentTheme = themeName;
       this.singleCharConfig = this.getDefaultSingleCharConfig();
-      this.clearCaches(); // Clear caches khi đổi theme
       this.recreateRubikCube();
     }
-  }
-
-  clearCaches() {
-    // Dispose cached textures
-    this.textureCache.forEach(texture => {
-      if (texture.dispose) texture.dispose();
-    });
-    this.textureCache.clear();
-    
-    // Dispose cached materials
-    this.materialCache.forEach(material => {
-      if (material.dispose) material.dispose();
-    });
-    this.materialCache.clear();
   }
 
   getAvailableThemes() {
@@ -202,65 +234,90 @@ class RenaissanceCodingCube {
   }
 
   recreateRubikCube() {
-    // Clear existing timers
+    // Efficient clearing and disposal of cubes
     this.rubikGroup.children.forEach((cube) => {
       if (cube.userData.textureUpdateTimer) {
         clearInterval(cube.userData.textureUpdateTimer);
       }
-    });
-    
-    // Dispose geometries and materials
-    this.rubikGroup.children.forEach((cube) => {
-      if (cube.geometry) cube.geometry.dispose();
-      if (cube.material) {
-        if (Array.isArray(cube.material)) {
-          cube.material.forEach(mat => mat.dispose());
-        } else {
-          cube.material.dispose();
-        }
+      cube.geometry.dispose();
+      if (cube.material instanceof Array) {
+        cube.material.forEach((m) => m.map && m.map.dispose());
+        cube.material.forEach((m) => m.dispose());
+      } else {
+        cube.material.map && cube.material.map.dispose();
+        cube.material.dispose();
+      }
+      // Remove wireframe
+      if (cube.children.length) {
+        cube.children.forEach((child) => {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) child.material.dispose();
+        });
       }
     });
-    
     this.rubikGroup.clear();
     this.createRubikCube();
   }
 
   setupLighting() {
-    // Giảm số lượng light để tăng hiệu xuất
-    const ambientLight = new THREE.AmbientLight(0xffd700, 0.6); // Tăng ambient light
-    
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6); // Giảm intensity
+    const ambientLight = new THREE.AmbientLight(0xffd700, 0.4);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight.position.set(10, 10, 5);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 1024; // Giảm từ 2048
+    directionalLight.shadow.mapSize.width = 1024;
     directionalLight.shadow.mapSize.height = 1024;
-    
-    // Bỏ bớt một số light không cần thiết
+
+    const rimLight = new THREE.DirectionalLight(0xcd7f32, 0.3);
+    rimLight.position.set(-5, 5, -5);
+
+    const fillLight = new THREE.DirectionalLight(0xffd700, 0.2);
+    fillLight.position.set(0, -5, 0);
+
     this.scene.add(ambientLight);
     this.scene.add(directionalLight);
+    this.scene.add(rimLight);
+    this.scene.add(fillLight);
   }
 
-  // Optimized background drawing with reduced complexity
   drawRenaissanceBackground(ctx, size) {
-    // Simplified gradient
+    // Parchment background
     const gradient = ctx.createRadialGradient(
-      size / 2, size / 2, 0,
-      size / 2, size / 2, size / 2
+      size / 2,
+      size / 2,
+      0,
+      size / 2,
+      size / 2,
+      size / 2
     );
     gradient.addColorStop(0, this.RENAISSANCE_COLORS.ivory);
-    gradient.addColorStop(0.5, this.RENAISSANCE_COLORS.parchment);
-    gradient.addColorStop(1, this.RENAISSANCE_COLORS.bronze);
+    gradient.addColorStop(0.2, this.RENAISSANCE_COLORS.parchment);
+    gradient.addColorStop(0.6, "#F0E68C");
+    gradient.addColorStop(0.8, this.RENAISSANCE_COLORS.bronze);
+    gradient.addColorStop(1, this.RENAISSANCE_COLORS.deepRed);
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, size, size);
 
-    // Reduced texture details
-    ctx.globalAlpha = 0.1;
+    // Aged paper texture
+    ctx.globalAlpha = 0.15;
     ctx.fillStyle = this.RENAISSANCE_COLORS.burgundy;
-    for (let i = 0; i < 20; i++) { // Giảm từ 40 xuống 20
+    for (let i = 0; i < 20; i++) {
+      // fewer iterations for perf
       const x = Math.random() * size;
       const y = Math.random() * size;
-      ctx.fillRect(x, y, 1, 2);
+      const w = Math.random() * 2 + 1;
+      const h = Math.random() * 4 + 1;
+      ctx.fillRect(x, y, w, h);
+    }
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = this.RENAISSANCE_COLORS.inkBlue;
+    for (let i = 0; i < 4; i++) {
+      const x = Math.random() * size;
+      const y = Math.random() * size;
+      const radius = Math.random() * 3 + 1;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
     }
     ctx.globalAlpha = 1;
   }
@@ -276,11 +333,9 @@ class RenaissanceCodingCube {
 
   drawSingleChar(ctx, size, customChar = null) {
     const theme = this.CODING_THEMES[this.currentTheme];
-
     let fontSize = Math.floor(size * 0.4);
     let fontFamily = "Georgia, serif";
     let fontWeight = "bold";
-
     switch (this.currentTheme) {
       case "code":
         fontFamily = 'Monaco, "Courier New", monospace';
@@ -304,20 +359,16 @@ class RenaissanceCodingCube {
         fontSize = Math.floor(size * 0.38);
         break;
     }
-
     ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-
-    // Simplified shadow
     ctx.shadowColor = this.RENAISSANCE_COLORS.burgundy;
-    ctx.shadowBlur = 4; // Giảm blur
-    ctx.shadowOffsetX = 2;
-    ctx.shadowOffsetY = 2;
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 3;
 
     const colorName = theme.colors[Math.floor(Math.random() * theme.colors.length)];
     ctx.fillStyle = this.RENAISSANCE_COLORS[colorName];
-
     const char = customChar || theme.symbols[Math.floor(Math.random() * theme.symbols.length)];
     ctx.fillText(char, size / 2, size / 2);
 
@@ -325,41 +376,73 @@ class RenaissanceCodingCube {
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    // Simplified border
     ctx.strokeStyle = this.RENAISSANCE_COLORS.bronze;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(8, 8, size - 16, size - 16);
+
+    ctx.strokeStyle = this.RENAISSANCE_COLORS.gold;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(12, 12, size - 24, size - 24);
+
+    ctx.fillStyle = this.RENAISSANCE_COLORS.gold;
+    ctx.font = `${Math.floor(size * 0.12)}px serif`;
+    const flourish = "❋";
+    ctx.fillText(flourish, 20, 20);
+    ctx.fillText(flourish, size - 20, 20);
+    ctx.fillText(flourish, 20, size - 20);
+    ctx.fillText(flourish, size - 20, size - 20);
   }
 
   drawRenaissanceGrid(ctx, size) {
     const theme = this.CODING_THEMES[this.currentTheme];
+    const gradient = ctx.createLinearGradient(0, 0, size, size);
+    gradient.addColorStop(0, this.RENAISSANCE_COLORS.ivory);
+    gradient.addColorStop(0.25, this.RENAISSANCE_COLORS.parchment);
+    gradient.addColorStop(0.5, "#F5F5DC");
+    gradient.addColorStop(0.75, "#F0E68C");
+    gradient.addColorStop(1, this.RENAISSANCE_COLORS.bronze);
 
-    // Simplified background
-    ctx.fillStyle = this.RENAISSANCE_COLORS.parchment;
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, size, size);
+
+    ctx.globalAlpha = 0.12;
+    for (let i = 0; i < 25; i++) {
+      ctx.fillStyle = this.RENAISSANCE_COLORS.burgundy;
+      const x = Math.random() * size;
+      const y = Math.random() * size;
+      ctx.fillRect(x, y, 1, Math.random() * 2 + 1);
+    }
+    ctx.globalAlpha = 1;
 
     const rows = 3;
     const cols = 3;
     const cellW = size / cols;
     const cellH = size / rows;
 
-    let fontSize = Math.floor(cellH * 0.5); // Giảm font size
-    let fontFamily = "Georgia, serif";
-
-    switch (this.currentTheme) {
-      case "code":
-        fontFamily = 'Monaco, "Courier New", monospace';
-        fontSize = Math.floor(cellH * 0.4);
-        break;
-      case "math":
-        fontFamily = "Times New Roman, serif";
-        fontSize = Math.floor(cellH * 0.55);
-        break;
-      default:
-        fontSize = Math.floor(cellH * 0.45);
-        break;
-    }
-
+    let fontSize = Math.floor(cellH * 0.6);
+    let fontFamily = "Fira Code, serif";
+    // switch (this.currentTheme) {
+    //   case "code":
+    //     fontFamily = 'Monaco, "Courier New", monospace';
+    //     fontSize = Math.floor(cellH * 0.45);
+    //     break;
+    //   case "math":
+    //     fontFamily = "Times New Roman, serif";
+    //     fontSize = Math.floor(cellH * 0.65);
+    //     break;
+    //   case "alchemy":
+    //     fontFamily = "Palatino, serif";
+    //     fontSize = Math.floor(cellH * 0.55);
+    //     break;
+    //   case "geometry":
+    //     fontFamily = "Helvetica, sans-serif";
+    //     fontSize = Math.floor(cellH * 0.7);
+    //     break;
+    //   case "manuscript":
+    //     fontFamily = "Garamond, serif";
+    //     fontSize = Math.floor(cellH * 0.5);
+    //     break;
+    // }
     ctx.font = `bold ${fontSize}px ${fontFamily}`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -373,31 +456,34 @@ class RenaissanceCodingCube {
       const char = theme.symbols[Math.floor(Math.random() * theme.symbols.length)];
       const colorName = theme.colors[Math.floor(Math.random() * theme.colors.length)];
 
+      ctx.shadowColor = this.RENAISSANCE_COLORS.burgundy;
+      ctx.shadowBlur = 2;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+
       ctx.fillStyle = this.RENAISSANCE_COLORS[colorName];
       ctx.fillText(char, x, y);
     }
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
   }
 
   createFaceTextures(modes = [], customChars = {}) {
+    // cache canvases for reuse if desired
     return modes.map((mode, index) => {
       const canvas = document.createElement("canvas");
       canvas.width = canvas.height = this.TEXTURE_SIZE;
       const ctx = canvas.getContext("2d");
 
-      // Use cached texture if possible
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+
       const faceOrder = ["right", "left", "top", "bottom", "front", "back"];
       const faceName = faceOrder[index];
       const customChar = customChars[faceName];
-      
-      const textureKey = `${this.currentTheme}_${mode}_${faceName}_${customChar}`;
-      
-      const texture = this.getOrCreateTexture(textureKey, () => {
-        const tex = new THREE.CanvasTexture(canvas);
-        tex.minFilter = THREE.LinearFilter;
-        tex.magFilter = THREE.LinearFilter;
-        tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-        return tex;
-      });
 
       this.drawChars(ctx, this.TEXTURE_SIZE, mode, customChar);
 
@@ -410,8 +496,13 @@ class RenaissanceCodingCube {
     const modes = faceOrder.map((face) => faceMode[face] || "grid");
 
     const faceTextures = this.createFaceTextures(modes, customChars);
-    const materials = faceTextures.map(f => 
-      this.getOrCreateMaterial(`${f.faceName}_${f.mode}`, f.texture)
+    const materials = faceTextures.map(
+      (f) =>
+        new THREE.MeshLambertMaterial({
+          map: f.texture,
+          transparent: true,
+          side: THREE.DoubleSide,
+        })
     );
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -419,48 +510,31 @@ class RenaissanceCodingCube {
     cube.castShadow = true;
     cube.receiveShadow = true;
 
-    // Simplified wireframe
+    // Wireframe edges
     const edges = new THREE.EdgesGeometry(geometry);
     const wireframe = new THREE.LineSegments(
       edges,
       new THREE.LineBasicMaterial({
         color: 0xd4af37,
+        linewidth: 2,
         transparent: true,
-        opacity: 0.5,
+        opacity: 0.7,
       })
     );
     cube.add(wireframe);
 
     cube.userData.faceTextures = faceTextures;
 
-    // Optimized texture updates - batch processing
+    // Lower texture update rate for optimization
     const updateInterval = this.TEXT_UPDATE_INTERVAL + Math.random() * 200;
     cube.userData.textureUpdateTimer = setInterval(() => {
-      this.pendingUpdates.push({
-        faceTextures: faceTextures,
-        priority: Math.random()
+      faceTextures.forEach((f) => {
+        this.drawChars(f.ctx, this.TEXTURE_SIZE, f.mode, f.customChar);
+        f.texture.needsUpdate = true;
       });
     }, updateInterval);
 
     return cube;
-  }
-
-  // Batch process texture updates
-  processPendingUpdates() {
-    if (this.pendingUpdates.length === 0) return;
-
-    // Sort by priority and process only a few per frame
-    this.pendingUpdates.sort((a, b) => b.priority - a.priority);
-    
-    const updateCount = Math.min(this.updateBatchSize, this.pendingUpdates.length);
-    
-    for (let i = 0; i < updateCount; i++) {
-      const update = this.pendingUpdates.shift();
-      update.faceTextures.forEach((f) => {
-        this.drawChars(f.ctx, this.TEXTURE_SIZE, f.mode, f.customChar);
-        f.texture.needsUpdate = true;
-      });
-    }
   }
 
   createRubikCube() {
@@ -477,23 +551,19 @@ class RenaissanceCodingCube {
         }
       }
     }
-
     this.scene.add(this.rubikGroup);
   }
 
   determineFaceMode(x, y, z) {
     const faceMode = {};
     const customChars = {};
-
     Object.entries(this.singleCharConfig).forEach(([faceName, config]) => {
       const [targetX, targetY, targetZ] = config.position;
-
       if (x === targetX && y === targetY && z === targetZ) {
         faceMode[faceName] = "single";
         customChars[faceName] = config.char;
       }
     });
-
     return { faceMode, customChars };
   }
 
@@ -512,7 +582,6 @@ class RenaissanceCodingCube {
       }
 
       let offset = new THREE.Vector3();
-
       if (dist < 0.01) {
         const offsetAmount = Math.sin(t * 1.5) * this.PULSE_AMPLITUDE;
         offset = direction.multiplyScalar(offsetAmount);
@@ -520,7 +589,6 @@ class RenaissanceCodingCube {
         const offsetAmount = Math.sin(t * 1.5 + Math.PI) * this.PULSE_AMPLITUDE;
         offset = direction.multiplyScalar(offsetAmount);
       }
-
       cube.position.set(
         base.x * this.SPACING + offset.x,
         base.y * this.SPACING + offset.y,
@@ -530,32 +598,20 @@ class RenaissanceCodingCube {
   }
 
   animate = (time) => {
-    if (!this.isAnimating) return;
-    
+    if (this._destroyed) return;
     this.animationId = requestAnimationFrame(this.animate);
-
-    // Frame rate limiting
-    if (time - this.lastUpdateTime < this.frameTime) {
-      return;
-    }
-    this.lastUpdateTime = time;
-
-    // Process pending texture updates
-    this.processPendingUpdates();
 
     this.updateCubePositions(time);
 
-    // Slower rotation for better performance
-    this.rubikGroup.rotation.y += 0.005;
-    this.rubikGroup.rotation.x += 0.002;
-    this.rubikGroup.rotation.z += 0.001;
+    this.rubikGroup.rotation.y += 0.008;
+    this.rubikGroup.rotation.x += 0.004;
+    this.rubikGroup.rotation.z += 0.002;
 
     this.renderer.render(this.scene, this.camera);
-    
-    this.frameCount++;
   };
 
   handleResize = () => {
+    if (!this.container) return;
     const w = this.container.clientWidth;
     this.camera.aspect = 1;
     this.camera.updateProjectionMatrix();
@@ -567,8 +623,8 @@ class RenaissanceCodingCube {
     window.addEventListener("resize", this.handleResize);
   }
 
+  // Animation controls
   pauseAnimation() {
-    this.isAnimating = false;
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
       this.animationId = null;
@@ -576,12 +632,12 @@ class RenaissanceCodingCube {
   }
 
   resumeAnimation() {
-    if (!this.isAnimating) {
-      this.isAnimating = true;
+    if (!this.animationId && !this._destroyed) {
       this.animate();
     }
   }
 
+  // Speed controls
   setAnimationSpeed(speed) {
     this.ANIMATION_SPEED = speed;
   }
@@ -590,48 +646,57 @@ class RenaissanceCodingCube {
     this.PULSE_AMPLITUDE = amplitude;
   }
 
+  // Cleanup method
   destroy() {
-    this.isAnimating = false;
-    
+    this._destroyed = true;
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
     }
-
-    // Clear all timers
     this.rubikGroup.children.forEach((cube) => {
       if (cube.userData.textureUpdateTimer) {
         clearInterval(cube.userData.textureUpdateTimer);
       }
+      cube.geometry.dispose();
+      if (cube.material instanceof Array) {
+        cube.material.forEach((m) => m.map && m.map.dispose());
+        cube.material.forEach((m) => m.dispose());
+      } else {
+        cube.material.map && cube.material.map.dispose();
+        cube.material.dispose();
+      }
+      if (cube.children.length) {
+        cube.children.forEach((child) => {
+          if (child.geometry) child.geometry.dispose();
+          if (child.material) child.material.dispose();
+        });
+      }
     });
-
-    // Clear caches
-    this.clearCaches();
-
-    // Remove event listeners
     window.removeEventListener("resize", this.handleResize);
-
-    // Dispose of Three.js objects
     this.scene.clear();
     this.renderer.dispose();
-
     if (this.container && this.renderer.domElement) {
       this.container.removeChild(this.renderer.domElement);
     }
   }
 }
 
-// Make available globally
+// Export for use in other modules
+// export default RenaissanceCodingCube;
+
 if (typeof window !== "undefined") {
   window.RenaissanceCodingCube = RenaissanceCodingCube;
 }
 
-// Optimized initialization
 window.addEventListener("DOMContentLoaded", () => {
-  const cube = new RenaissanceCodingCube("rubik-cube", { 
-    theme: "code"
+  const cube = new RenaissanceCodingCube("rubik-cube", { theme: "code" });
+  cube.setTheme("math");
+  cube.setTheme("alchemy");
+  cube.setFaceCharacter("front", "∫");
+  cube.updateSingleCharConfig({
+    front: { position: [1, 1, 2], char: "{}" },
+    top: { position: [1, 2, 1], char: "=>" },
   });
-  
-  // Example usage with performance considerations
-  // cube.setTheme("math");
-  // cube.setFaceCharacter("front", "∫");
+  cube.pauseAnimation();
+  cube.resumeAnimation();
+  cube.setAnimationSpeed(0.001);
 });

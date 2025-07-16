@@ -1,49 +1,53 @@
----
-const text = "@jarviisha";
----
-
-<section id="welcome" class="h-screen w-full flex justify-center relative">
+<section id="welcome" class="relative flex h-screen w-full justify-center">
+  <!-- Fade overlay for scroll effect -->
   <div
     id="fade-overlay"
-    class="absolute inset-0 h-[200vh] pointer-events-none -z-10"
-  >
+    class="pointer-events-none absolute inset-0 -z-10 h-[200vh] opacity-0 transition-opacity duration-300 ease-out"
+  ></div>
+  
+  <!-- Background image -->
+  <div class="pointer-events-none absolute inset-0 -z-20 h-[200vh] select-none bg-black">
+    <img 
+      src="/bg.jpeg" 
+      alt="Background" 
+      class="h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
   </div>
-  <div
-    class="absolute -z-20 select-none h-[200vh] pointer-events-none inset-0 bg-black"
-  >
-    <img src="/bg.jpeg" alt="" class="h-full w-full object-cover" />
-  </div>
-  <div id="rubik-cube" class="w-1/2 absolute right-1 top-2 z-5"></div>
-  <div class="container mx-auto h-full flex pt-36">
-    <div class="flex z-50 w-full">
-      <div class="flex flex-col w-full gap-4">
-        <div
-          class="z-10 leading-none font-header text-white text-[240px] floating-text tracking-tight pb-4"
-        >
-          <span>
-            great
-            <span class="">software </span><br />
-            is not just built, it's <span class="">crafted!</span>
-          </span>
-        </div>
-        <div class="flex w-full z-50 pl-2 items-center">
-          <a href="" class="text-white text-2xl rounded-full px-6 py-4 border">
+  
+  <!-- Rubik cube -->
+  <div id="rubik-cube" class="absolute right-1 top-2 z-10 w-1/2"></div>
+  
+  <!-- Main content -->
+  <div class="container mx-auto flex h-full pt-36">
+    <div class="z-50 flex w-full">
+      <div class="flex w-full flex-col gap-4">
+        <!-- Hero text -->
+        <h1 class="floating-text z-10 pb-4 font-header text-[240px] leading-none tracking-tight text-white">
+          great
+          <span class="highlighted-text">software</span><br />
+          is not just built, it's <span class="highlighted-text">crafted!</span>
+        </h1>
+        
+        <!-- CTA button -->
+        <div class="z-50 flex w-full items-center pl-2">
+          <a 
+            href="#contact" 
+            class="rounded-full border px-6 py-4 text-2xl text-white transition-all duration-300 hover:bg-white hover:text-black"
+            aria-label="Contact us"
+          >
             Let's talk
           </a>
         </div>
       </div>
     </div>
   </div>
-
-  <script src="../scripts/rubik.js"></script>
-
-  <style>
-    #rubik-cube canvas {
-      background: transparent !important;
-    }
-  </style>
 </section>
+
 <style>
+
+  /* Fade overlay gradient */
   #fade-overlay {
     background: linear-gradient(
       to bottom,
@@ -53,18 +57,41 @@ const text = "@jarviisha";
       rgba(0, 0, 0, 0.9) 80%,
       rgba(0, 0, 0, 1) 100%
     );
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
   }
+
+
 </style>
+
 <script type="module">
-  window.addEventListener("scroll", () => {
+  // Optimized scroll handler with throttling
+  let ticking = false;
+
+  function updateFadeOverlay() {
     const overlay = document.getElementById("fade-overlay");
-    const maxHeight = window.innerHeight; // 100vh
+    if (!overlay) return;
 
+    const maxHeight = window.innerHeight;
     const scrollY = window.scrollY;
-    const opacity = Math.min(scrollY / maxHeight, 1); // Cuộn 0 → 100vh → opacity 0 → 1
+    const opacity = Math.min(scrollY / maxHeight, 1);
 
-    overlay.style.opacity = opacity;
+    overlay.style.opacity = opacity.toString();
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(updateFadeOverlay);
+      ticking = true;
+    }
+  }
+
+  // Use passive listener for better performance
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Cleanup on page unload
+  window.addEventListener("beforeunload", () => {
+    window.removeEventListener("scroll", onScroll);
   });
 </script>
+
+<script src="../scripts/rubik.js"></script>

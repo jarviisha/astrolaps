@@ -1,3 +1,126 @@
+---
+// Move contact data to frontmatter for better organization
+const contactCards = [
+  {
+    id: "github",
+    title: "GitHub",
+    link: "github.com/jarviisha",
+    icon: "M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z",
+    color: "text-gray-900",
+    hoverColor: "hover:shadow-white/20",
+    size: "w-96 h-24",
+    position: "top-12 left-8",
+    rotation: "rotate-2",
+    iconSize: "w-12 h-12",
+    textSize: "text-lg",
+  },
+  {
+    id: "facebook",
+    title: "Facebook",
+    link: "facebook.com/jarviisha",
+    icon: "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z",
+    color: "text-blue-500",
+    hoverColor: "hover:shadow-blue-500/30",
+    size: "w-80 h-18",
+    position: "top-32 right-4",
+    rotation: "-rotate-1",
+    iconSize: "w-10 h-10",
+    textSize: "text-base",
+  },
+  {
+    id: "twitter",
+    title: "X (Twitter)",
+    link: "@jarviisha",
+    icon: "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z",
+    color: "text-black",
+    hoverColor: "hover:shadow-gray-500/30",
+    size: "w-72 h-16",
+    position: "top-20 left-72",
+    rotation: "rotate-1",
+    iconSize: "w-8 h-8",
+    textSize: "text-sm",
+  },
+  {
+    id: "gmail",
+    title: "Gmail",
+    link: "jarviisha@gmail.com",
+    icon: "M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z",
+    color: "text-red-500",
+    hoverColor: "hover:shadow-red-500/30",
+    size: "w-[26rem] h-28",
+    position: "bottom-28 left-2",
+    rotation: "-rotate-2",
+    iconSize: "w-14 h-14",
+    textSize: "text-xl",
+  },
+  {
+    id: "phone",
+    title: "Phone",
+    link: "+84 123 456 789",
+    icon: "M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z",
+    color: "text-green-500",
+    hoverColor: "hover:shadow-green-500/30",
+    size: "w-88 h-22",
+    position: "top-52 left-16",
+    rotation: "rotate-3",
+    iconSize: "w-11 h-11",
+    textSize: "text-lg",
+  },
+  {
+    id: "location",
+    title: "Location",
+    link: "Hanoi City, Vietnam",
+    icon: "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z",
+    color: "text-orange-500",
+    hoverColor: "hover:shadow-orange-500/30",
+    size: "w-76 h-20",
+    position: "bottom-8 right-8",
+    rotation: "-rotate-1",
+    iconSize: "w-10 h-10",
+    textSize: "text-base",
+  },
+];
+
+const formFields = [
+  {
+    id: "name",
+    label: "Full Name",
+    type: "text",
+    required: true,
+    placeholder: "Enter your full name",
+  },
+  {
+    id: "email",
+    label: "Email",
+    type: "email",
+    required: true,
+    placeholder: "your.email@example.com",
+  },
+  {
+    id: "phone",
+    label: "Phone Number",
+    type: "tel",
+    required: false,
+    placeholder: "+1 (555) 123-4567",
+  },
+  {
+    id: "subject",
+    label: "Subject",
+    type: "textarea",
+    required: false,
+    placeholder: "",
+  },
+  {
+    id: "message",
+    label: "Message",
+    type: "textarea",
+    required: true,
+    placeholder: "Share your ideas with me...",
+    rows: 4,
+  },
+];
+---
+
 <!-- Background fixed -->
 <div
   class="fixed top-0 left-0 w-full h-screen -z-50 bg-black transition-opacity duration-1000 ease-out"
@@ -5,11 +128,14 @@
   style="background-image: url('/michelangelo-creation-of-adam.jpg'); background-size: cover; background-position: center; background-attachment: fixed; opacity: 0;"
 >
 </div>
-<div class="fixed bg-gradient-to-b from-black/50 to-black/90 z-[-40] w-full h-screen top-0 left-0"></div>
+<div
+  class="fixed bg-gradient-to-b from-black/50 to-black/90 z-[-40] w-full h-screen top-0 left-0"
+>
+</div>
 
-<!-- Section vén màn -->
+<!-- Contact Section -->
 <section class="h-screen w-full relative mt-96" id="curtainTrigger">
-  <!-- Text bên trái -->
+  <!-- Header Text -->
   <div
     class="flex pl-16 h-[500px] text-[500px] leading-none font-header text-white z-10 items-center"
   >
@@ -18,175 +144,75 @@
     </span>
   </div>
 
-  <!-- Container Grid cho Contact Cards và Form -->
+  <!-- Main Container -->
   <div
     class="container h-full grid grid-cols-12 gap-4 items-center z-20 mx-auto"
   >
-    <!-- Contact Cards - chiếm 6 columns, bắt đầu từ col 1 -->
-    <div class="col-span-6 mt-24  relative h-[500px]">
-      <!-- GitHub Card - Large rectangle, tilted -->
-      <div class="absolute top-12 left-8 w-96 h-24 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-6 transform rotate-2 hover:rotate-0 hover:z-50 shadow-2xl hover:shadow-white/20">
-        <div class="flex items-center space-x-5">
-          <svg class="w-12 h-12 text-gray-900 group-hover:scale-110 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-          </svg>
-          <div class="flex flex-col">
-            <h4 class="text-white font-semibold text-lg">GitHub</h4>
-            <p class="text-white/70 text-base">github.com/jarviisha</p>
+    <!-- Contact Cards Section -->
+    <div class="col-span-6 mt-24 relative h-[500px]">
+      {
+        contactCards.map((card) => (
+          <div
+            class={`absolute ${card.position} ${card.size} bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-6 transform ${card.rotation} hover:rotate-0 hover:z-50 shadow-2xl ${card.hoverColor}`}
+            data-contact={card.id}
+          >
+            <div class="flex items-center space-x-5">
+              <svg
+                class={`${card.iconSize} ${card.color} group-hover:scale-110 transition-transform flex-shrink-0`}
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d={card.icon} />
+              </svg>
+              <div class="flex flex-col">
+                <h4 class={`text-white font-semibold ${card.textSize}`}>
+                  {card.title}
+                </h4>
+                <p class="text-white/70 text-base">{card.link}</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Facebook Card - Medium rectangle, tilted opposite -->
-      <div class="absolute top-32 right-4 w-80 h-18 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-5 transform -rotate-1 hover:rotate-0 hover:z-50 shadow-2xl hover:shadow-blue-500/30">
-        <div class="flex items-center space-x-4">
-          <svg class="w-10 h-10 text-blue-500 group-hover:scale-110 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-          </svg>
-          <div class="flex flex-col">
-            <h4 class="text-white font-semibold text-base">Facebook</h4>
-            <p class="text-white/70 text-sm">facebook.com/jarviisha</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- X (Twitter) Card - Small rectangle -->
-      <div class="absolute top-20 left-72 w-72 h-16 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-4 transform rotate-1 hover:rotate-0 hover:z-50 shadow-2xl hover:shadow-gray-500/30">
-        <div class="flex items-center space-x-4">
-          <svg class="w-8 h-8 text-black group-hover:scale-110 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-          </svg>
-          <div class="flex flex-col">
-            <h4 class="text-white font-semibold text-sm">X (Twitter)</h4>
-            <p class="text-white/70 text-sm">@jarviisha</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gmail Card - Extra Large rectangle -->
-      <div class="absolute bottom-28 left-2 w-[26rem] h-28 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-7 transform -rotate-2 hover:rotate-0 hover:z-50 shadow-2xl hover:shadow-red-500/30">
-        <div class="flex items-center space-x-6">
-          <svg class="w-14 h-14 text-red-500 group-hover:scale-110 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/>
-          </svg>
-          <div class="flex flex-col">
-            <h4 class="text-white font-semibold text-xl">Gmail</h4>
-            <p class="text-white/70 text-lg">jarviisha@gmail.com</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Phone Card - Medium-Large rectangle -->
-      <div class="absolute top-52 left-16 w-88 h-22 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-6 transform rotate-3 hover:rotate-0 hover:z-50 shadow-2xl hover:shadow-green-500/30">
-        <div class="flex items-center space-x-5">
-          <svg class="w-11 h-11 text-green-500 group-hover:scale-110 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-          </svg>
-          <div class="flex flex-col">
-            <h4 class="text-white font-semibold text-lg">Phone</h4>
-            <p class="text-white/70 text-base">+84 123 456 789</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Location Card - Small-Medium rectangle -->
-      <div class="absolute bottom-8 right-8 w-76 h-20 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 hover:scale-110 transition-all duration-300 cursor-pointer group flex items-center px-5 transform -rotate-1 hover:rotate-0 hover:z-50 shadow-2xl hover:shadow-orange-500/30">
-        <div class="flex items-center space-x-4">
-          <svg class="w-10 h-10 text-orange-500 group-hover:scale-110 transition-transform flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-          </svg>
-          <div class="flex flex-col">
-            <h4 class="text-white font-semibold text-base">Location</h4>
-            <p class="text-white/70 text-sm">Hanoi City, Vietnam</p>
-          </div>
-        </div>
-      </div>
+        ))
+      }
     </div>
-
+    <!-- Contact Form -->
     <form
-      class="bg-white/10 backdrop-blur-sm  col-start-9 col-end-13 border-white/20 rounded-xl p-8 shadow-2xl"
+      id="contactForm"
+      class="bg-white/10 backdrop-blur-sm col-start-9 col-end-13 border-white/20 rounded-xl p-8 shadow-2xl transform  transition-transform duration-700 ease-out"
     >
       <h3 class="text-white text-2xl font-bold mb-6 text-center">Contact Me</h3>
 
       <div class="space-y-4">
-        <!-- Name -->
-        <div>
-          <label for="name" class="block text-white text-sm font-medium mb-2"
-            >Full Name</label
-          >
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-            placeholder="Enter your full name"
-          />
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label for="email" class="block text-white text-sm font-medium mb-2"
-            >Email</label
-          >
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-            placeholder="your.email@example.com"
-          />
-        </div>
-
-        <!-- Phone -->
-        <div>
-          <label for="phone" class="block text-white text-sm font-medium mb-2"
-            >Phone Number</label
-          >
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-            placeholder="+1 (555) 123-4567"
-          />
-        </div>
-
-        <!-- Subject -->
-        <div>
-          <label for="subject" class="block text-white text-sm font-medium mb-2"
-            >Subject</label
-          >
-          <textarea
-            id="subject"
-            name="subject"
-            class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
-          ></textarea>
-          <!-- <option value="" class="bg-gray-800">Select a subject</option>
-            <option value="collaboration" class="bg-gray-800"
-              >Project Collaboration</option
-            >
-            <option value="freelance" class="bg-gray-800">Freelance Work</option
-            >
-            <option value="job" class="bg-gray-800">Job Opportunity</option>
-            <option value="other" class="bg-gray-800">Other</option> -->
-          <!-- </textarea> -->
-        </div>
-
-        <!-- Message -->
-        <div>
-          <label for="message" class="block text-white text-sm font-medium mb-2"
-            >Message</label
-          >
-          <textarea
-            id="message"
-            name="message"
-            rows="4"
-            required
-            class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent resize-none"
-            placeholder="Share your ideas with me..."></textarea>
-        </div>
+        {
+          formFields.map((field) => (
+            <div>
+              <label
+                for={field.id}
+                class="block text-white text-sm font-medium mb-2"
+              >
+                {field.label}
+              </label>
+              {field.type === "textarea" ? (
+                <textarea
+                  id={field.id}
+                  name={field.id}
+                  rows={field.rows || 2}
+                  required={field.required}
+                  class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent resize-none"
+                  placeholder={field.placeholder}
+                />
+              ) : (
+                <input
+                  id={field.id}
+                  name={field.id}
+                  required={field.required}
+                  class="w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent"
+                  placeholder={field.placeholder}
+                />
+              )}
+            </div>
+          ))
+        }
 
         <!-- Submit Button -->
         <button
@@ -201,28 +227,114 @@
 </section>
 
 <script type="module">
-  const background = document.getElementById("globalBackground");
-  const trigger = document.getElementById("curtainTrigger");
-  const contactForm = document.getElementById("contactForm");
+  // Optimized scroll handler with throttling
+  let ticking = false;
 
-  window.addEventListener("scroll", () => {
+  function updateScrollEffects() {
+    const background = document.getElementById("globalBackground");
+    const trigger = document.getElementById("curtainTrigger");
+    const contactForm = document.getElementById("contactForm");
+
+    if (!background || !trigger || !contactForm) return;
+
     const triggerTop = trigger.offsetTop;
     const triggerHeight = trigger.offsetHeight;
     const scrollY = window.scrollY;
     const windowHeight = window.innerHeight;
 
-    // Tính khoảng cuộn vào vùng hiển thị
+    // Calculate reveal amount
     const distance = scrollY + windowHeight - triggerTop;
     const revealAmount = Math.min(Math.max(distance / triggerHeight, 0), 1);
 
-    // Cập nhật độ mờ dần của background
-    background.style.opacity = revealAmount;
+    // Update background opacity
+    background.style.opacity = revealAmount.toString();
 
-    // Animation cho form xuất hiện từ dưới lên
-    if (revealAmount > 0.3) {
-      contactForm.style.transform = "translateY(0)";
-    } else {
-      contactForm.style.transform = "translateY(100%)";
+    // Animate form appearance
+    contactForm.style.transform =
+      revealAmount > 0.3 ? "translateY(0)" : "translateY(100%)";
+
+    ticking = false;
+  }
+
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateScrollEffects);
+      ticking = true;
     }
+  }
+
+  // Throttled scroll event
+  window.addEventListener("scroll", requestTick, { passive: true });
+
+  // Add click handlers for contact cards
+  document.addEventListener("DOMContentLoaded", () => {
+    const contactCards = document.querySelectorAll("[data-contact]");
+
+    contactCards.forEach((card) => {
+      card.addEventListener("click", () => {
+        const contactType = card.dataset.contact;
+        const link = card.querySelector("p").textContent;
+
+        // Handle different contact types
+        switch (contactType) {
+          case "gmail":
+            window.open(`mailto:${link}`, "_blank");
+            break;
+          case "phone":
+            window.open(`tel:${link}`, "_blank");
+            break;
+          case "github":
+            window.open(`https://${link}`, "_blank");
+            break;
+          case "facebook":
+            window.open(`https://${link}`, "_blank");
+            break;
+          case "twitter":
+            window.open(
+              `https://twitter.com/${link.replace("@", "")}`,
+              "_blank",
+            );
+            break;
+          default:
+            console.log(`Contact: ${link}`);
+        }
+      });
+    });
+
+    // Form submission handler
+    const form = document.getElementById("contactForm");
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // Get form data
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      // Here you would typically send the data to your backend
+      console.log("Form submitted:", data);
+
+      // Show success message (you can customize this)
+      alert("Message sent successfully!");
+    });
   });
 </script>
+
+<style>
+  /* Optimize CSS for better performance */
+  #globalBackground {
+    will-change: opacity;
+  }
+
+  #contactForm {
+    will-change: transform;
+  }
+
+  [data-contact] {
+    will-change: transform;
+  }
+
+  /* Preload hover states for better performance */
+  [data-contact]:hover {
+    transform-origin: center center;
+  }
+</style>
