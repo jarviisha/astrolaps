@@ -1,9 +1,68 @@
 ---
 import SkillCard from "./blocks/SkillCard.astro";
+const imgLoops = [
+  "/loop/1.jpeg",
+  "/loop/2.jpeg",
+  "/loop/3.jpeg",
+  "/loop/4.jpeg",
+  "/loop/5.jpeg",
+  "/loop/6.jpeg",
+  "/loop/7.jpeg",
+  "/loop/8.jpeg",
+];
 ---
 
-<section id="skill" class="w-full pt-20 pb-32">
-  <div class="container justify-center mx-auto h-full text-white">
+<section id="skill" class="w-full pt-20 pb-32 relative overflow-hidden">
+  <!-- 3D Depth Background Layers -->
+  <div class="absolute inset-0 -z-20">
+    {imgLoops.map((img, index) => {
+      // Tạo kích thước và vị trí cho 8 ảnh
+      const sizes = [
+        { width: '300px', top: '10%', left: '5%' },
+        { width: '400px', top: '25%', left: '50%' },
+        { width: '280px', top: '5%', left: '40%' },
+        { width: '200px', top: '60%', left: '15%' },
+        { width: '240px', top: '45%', left: '80%' },
+        { width: '260px', top: '70%', left: '50%' },
+        { width: '320px', top: '5%', left: '75%' },
+        { width: '290px', top: '55%', left: '5%' }
+      ];
+      
+      const currentSize = sizes[index];
+      
+      return (
+        <div 
+          class={`absolute parallax-layer layer-${index + 1}`}
+          data-speed={0.1 + (index * 0.1)}
+          style={{
+            width: currentSize.width,
+            height: 'auto',
+            top: currentSize.top,
+            left: currentSize.left,
+            transform: `translateZ(${-50 - (index * 60)}px) scale(${1 + (index * 0.06)})`,
+            opacity: 0.8 - (index * 0.05),
+            filter: `blur(${index * 0.5}px) brightness(${1.4 + (index * 0.06)}) contrast(1.4) saturate(1.2)`,
+            mixBlendMode: 'normal'
+          }}
+        >
+          <img 
+            src={img}
+            alt={`Background layer ${index + 1}`}
+            class="w-full h-auto object-cover"
+            style={{
+              objectPosition: `${20 + (index * 10)}% ${30 + (index * 8)}%`,
+              transform: `rotate(${(index - 3) * 2.5}deg)`
+            }}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      );
+    })}
+    <div class="absolute inset-0 bg-gradient-to-br from-black/15 via-transparent to-black/20"></div>
+  </div>
+
+  <div class="container justify-center mx-auto h-full text-white relative z-10">
     <!-- Header với GPU acceleration -->
     <div class="relative will-change-transform">
       <h1 class="text-9xl font-header transform-gpu">my-skills</h1>
@@ -12,20 +71,6 @@ import SkillCard from "./blocks/SkillCard.astro";
     <div class="grid grid-cols-12 gap-2 w-full">
       <!-- Backend Section với optimized images -->
       <div class="flex gap-8 relative justify-end col-start-5 col-end-13">
-        <!-- Optimized background image container -->
-        <div class="h-[800px] -z-10 w-[640px] absolute -top-20 -right-44 overflow-hidden">
-          <img 
-            src="/banhrang.jpeg" 
-            alt="Backend development background" 
-            class="h-full w-full object-cover transform-gpu" 
-            loading="lazy"
-            decoding="async"
-            width="640"
-            height="800"
-          />
-          <div class="absolute top-0 bg-black/60 w-full h-full pointer-events-none"></div>
-        </div>
-        
         <div class="p-4 will-change-transform">
           <h2 class="text-4xl mb-4 font-bold">BACKEND DEVELOPER</h2>
           <p class="mb-6">
@@ -71,18 +116,6 @@ import SkillCard from "./blocks/SkillCard.astro";
       <!-- Frontend Section với optimized layout -->
       <div class="flex gap-8 relative col-span-12 mt-36">
         <div class="p-4 w-full will-change-transform">
-          <!-- Optimized background image container -->
-          <div class="-z-10 h-[800px] w-[800px] absolute -top-20 -left-44 overflow-hidden">
-            <img 
-              src="/tower.jpeg" 
-              alt="Frontend development background" 
-              class="h-auto w-full object-cover transform-gpu" 
-              loading="lazy"
-              decoding="async"
-            />
-            <div class="absolute top-0 bg-black/70 w-full h-full pointer-events-none"></div>
-          </div>
-          
           <h2 class="text-4xl mb-4 font-bold">FRONTEND DEVELOPER</h2>
           <p class="mb-6">
             I create modern, responsive, and accessible user interfaces with a focus on
@@ -114,11 +147,92 @@ import SkillCard from "./blocks/SkillCard.astro";
 </section>
 
 <style>
+  /* 3D Depth Background Styles với kích thước đa dạng */
+  .parallax-layer {
+    transform-style: preserve-3d;
+    perspective: 1200px;
+    will-change: transform;
+    backface-visibility: hidden;
+    /* Loại bỏ border-radius và box-shadow để có góc vuông */
+  }
+  
+  .parallax-layer img {
+    transform-style: preserve-3d;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: contrast(1.1) saturate(1.2);
+  }
+  
+  /* Layer-specific positioning cho depth và stacking */
+  .layer-1 { 
+    z-index: -26; 
+    transform-origin: center bottom;
+  }
+  .layer-2 { 
+    z-index: -25; 
+    transform-origin: right top;
+  }
+  .layer-3 { 
+    z-index: -24; 
+    transform-origin: left center;
+  }
+  .layer-4 { 
+    z-index: -23; 
+    transform-origin: center top;
+  }
+  .layer-5 { 
+    z-index: -22; 
+    transform-origin: right bottom;
+  }
+  .layer-6 { 
+    z-index: -21; 
+    transform-origin: left bottom;
+  }
+  .layer-7 { 
+    z-index: -20; 
+    transform-origin: right center;
+  }
+  .layer-8 { 
+    z-index: -19; 
+    transform-origin: center center;
+  }
+
+  /* Staggered animation cho từng layer */
+  .layer-1 { animation-delay: 0s; }
+  .layer-2 { animation-delay: 0.1s; }
+  .layer-3 { animation-delay: 0.2s; }
+  .layer-4 { animation-delay: 0.3s; }
+  .layer-5 { animation-delay: 0.4s; }
+  .layer-6 { animation-delay: 0.5s; }
+  .layer-7 { animation-delay: 0.6s; }
+  .layer-8 { animation-delay: 0.7s; }
+
   /* GPU acceleration cho better performance */
   #skill {
     will-change: transform;
     transform: translateZ(0);
     contain: layout style paint;
+    perspective: 1500px;
+    transform-style: preserve-3d;
+    background: radial-gradient(ellipse at center, rgba(20, 20, 40, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+  }
+  
+  /* Floating animation cho dynamic effect */
+  @keyframes floatLayer {
+    0%, 100% { 
+      transform: translateY(0px) rotateX(0deg); 
+    }
+    50% { 
+      transform: translateY(-15px) rotateX(2deg); 
+    }
+  }
+  
+  .parallax-layer:nth-child(odd) {
+    animation: floatLayer 8s ease-in-out infinite;
+  }
+  
+  .parallax-layer:nth-child(even) {
+    animation: floatLayer 10s ease-in-out infinite reverse;
   }
   
   /* Optimize font rendering */
@@ -161,6 +275,12 @@ import SkillCard from "./blocks/SkillCard.astro";
     .h-\[400px\] {
       height: 300px;
     }
+    
+    /* Đơn giản hóa parallax trên mobile */
+    .parallax-layer {
+      animation: none !important;
+      /* Loại bỏ border-radius và box-shadow trên mobile */
+    }
   }
   
   @media (max-width: 480px) {
@@ -176,10 +296,57 @@ import SkillCard from "./blocks/SkillCard.astro";
     .w-2\/3 {
       width: 100%;
     }
+    
+    /* Giảm kích thước layer trên mobile rất nhỏ */
+    .parallax-layer {
+      width: 90% !important;
+      height: 60% !important;
+      opacity: 0.1 !important;
+    }
   }
 </style>
 
 <script type="module">
+  // 3D Parallax Effect với throttling cho performance
+  let ticking = false;
+  
+  function updateParallax() {
+    const scrollY = window.pageYOffset;
+    const skillSection = document.getElementById('skill');
+    
+    if (!skillSection) return;
+    
+    const rect = skillSection.getBoundingClientRect();
+    const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+    
+    if (isInView) {
+      const parallaxLayers = skillSection.querySelectorAll('.parallax-layer');
+      
+      parallaxLayers.forEach((layer, index) => {
+        const speed = parseFloat(layer.dataset.speed) || 0.1;
+        const yPos = -(scrollY * speed);
+        const scale = 1 + (index * 0.05);
+        const opacity = Math.max(0.1, 0.3 - (index * 0.04));
+        
+        // Sử dụng transform3d cho GPU acceleration
+        layer.style.transform = `
+          translate3d(0, ${yPos}px, ${-100 - (index * 50)}px) 
+          scale(${scale})
+        `;
+        layer.style.opacity = opacity;
+      });
+    }
+    
+    ticking = false;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }
+  
   // Intersection Observer cho lazy loading và animations
   const observerOptions = {
     threshold: 0.1,
@@ -190,20 +357,48 @@ import SkillCard from "./blocks/SkillCard.astro";
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('animate-in');
-        // Unobserve sau khi animated để tối ưu performance
+        // Enable parallax khi section visible
+        if (entry.target.id === 'skill') {
+          window.addEventListener('scroll', requestTick, { passive: true });
+        }
         observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
   
-  // Observe skill cards với throttling
+  // Initialize khi DOM ready
   document.addEventListener('DOMContentLoaded', () => {
+    const skillSection = document.getElementById('skill');
     const skillCards = document.querySelectorAll('#skill [class*="col-"]');
+    
+    if (skillSection) {
+      observer.observe(skillSection);
+      // Initial parallax setup
+      updateParallax();
+    }
+    
     skillCards.forEach(card => observer.observe(card));
   });
   
-  // Cleanup observer when page unloads
+  // Cleanup observers và event listeners
   window.addEventListener('beforeunload', () => {
     observer.disconnect();
+    window.removeEventListener('scroll', requestTick);
+  });
+  
+  // Pause parallax khi tab không active để tiết kiệm battery
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      window.removeEventListener('scroll', requestTick);
+    } else {
+      const skillSection = document.getElementById('skill');
+      if (skillSection) {
+        const rect = skillSection.getBoundingClientRect();
+        const isInView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (isInView) {
+          window.addEventListener('scroll', requestTick, { passive: true });
+        }
+      }
+    }
   });
 </script>

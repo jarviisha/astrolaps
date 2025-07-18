@@ -1,46 +1,46 @@
 ---
-import TechBanner from "./blocks/TechBanner.astro";
 ---
 
-<section class="relative text-white bg-transparent" id="introduction">
-  <!-- Background text - optimized with will-change -->
-  <div class="absolute justify-center bottom-0 left-0 font-header flex h-full w-full items-end text-[650px] opacity-10 leading-none inset-0 text-white -z-10 will-change-transform">
+<section class="relative text-white bg-transparent transform-gpu intro-section opacity-0" id="introduction">
+  <!-- Background text with enhanced parallax -->
+  <div class="absolute justify-center bottom-0 left-0 font-header flex h-full w-full items-end text-[650px] opacity-10 leading-none inset-0 text-white -z-10 transform-gpu bg-text">
     CODING IS LIFE
   </div>
   
   <div class="flex inset-0 mb-40">
     <div class="flex mt-28 container mx-auto justify-between">
-      <!-- Image section - optimized loading -->
-      <div class="w-[500px] h-[600px] relative">
-        <!-- Optimized image loading -->
+      <!-- Image section với enhanced animations -->
+      <div class="w-[500px] h-[600px] relative image-container opacity-0 translate-x-[-100px]">
         <img 
           src="/avt.png" 
-          class="w-full h-auto" 
+          class="w-full h-auto transform-gpu profile-image" 
           alt="Jarviisha profile" 
           loading="lazy"
           decoding="async"
           width="500"
           height="600"
         />
+        <!-- Animated border effect -->
+        <div class="absolute inset-0 border-4 border-gradient opacity-0 image-border"></div>
       </div>
       
-      <!-- Content section -->
-      <div class="w-2/3 bg-transparent">
+      <!-- Content section với staggered animations -->
+      <div class="w-2/3 bg-transparent transform-gpu content-section opacity-0 translate-x-[100px]">
         <div class="border-gray-600">
-          <h2 class="text-[200px] text-end leading-none font-header border-gray-600">
+          <h2 class="text-[200px] text-end leading-none font-header border-gray-600 transform-gpu about-title opacity-0 translate-y-[-50px]">
             about-me
           </h2>
           <div class="pl-40">
-            <p class="text-4xl px-4 py-2 mb-4">
-              Hello! I'm <span class="text-primary font-script text-9xl font-bold">Jarviisha</span>
+            <p class="text-4xl px-4 py-2 mb-4 transform-gpu intro-text opacity-0 translate-y-[30px]">
+              Hello! I'm <span class="text-primary font-script text-9xl font-bold transform-gpu name-highlight scale-80 z-50">Jarviisha</span>
             </p>
-            <p class="text-3xl px-4 py-2 mb-4">
+            <p class="text-3xl px-4 py-2 mb-4 transform-gpu description-text opacity-0 translate-y-[30px]">
               I'm a software developer passionate about system architecture and
               performance optimization, especially in distributed systems.
               Proficient in .NET, Golang, SQL Server, and Linux, I specialize in
               building efficient, scalable, and maintainable solutions.
             </p>
-            <p class="text-xl px-4 py-2 italic">
+            <p class="text-xl px-4 py-2 italic transform-gpu quote-text opacity-0 translate-y-[30px] scale-95">
               "To me, programming is not just about writing code — it's about
               crafting clean, purposeful, and elegant systems."
             </p>
@@ -50,24 +50,422 @@ import TechBanner from "./blocks/TechBanner.astro";
     </div>
   </div>
   
-  <TechBanner />
+  <div class="transform-gpu tech-banner-container opacity-0 translate-y-[50px]">
+    <!-- <TechBanner /> -->
+  </div>
 </section>
 
 <style>
-  /* GPU acceleration for better performance */
-  #introduction {
-    will-change: transform;
-    transform: translateZ(0);
+  /* Enhanced styles with GSAP-ready classes */
+  .intro-section {
+    will-change: transform, opacity;
+    perspective: 1200px;
+    transform-style: preserve-3d;
   }
-  
-  /* Optimize font rendering */
+
+  .image-border {
+    background: linear-gradient(45deg, transparent, rgba(255, 107, 107, 0.3), transparent);
+    border-radius: 8px;
+    transform: scale(1.1);
+  }
+
   .font-header, .font-script {
     font-display: swap;
+    text-rendering: optimizeLegibility;
   }
   
-  /* Prevent layout shifts */
   img {
     content-visibility: auto;
     contain-intrinsic-size: 500px 600px;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Gradient text effect */
+  .name-highlight {
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 3s ease-in-out infinite;
+    /* Fixes for text clipping */
+    display: inline-block;
+    position: relative;
+    padding: 0.1em 0.2em;
+    margin: 0 0.1em;
+    line-height: 1.2;
+    /* Ensure full text visibility */
+    min-width: fit-content;
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Enhanced transforms */
+  .transform-gpu {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+
+  /* Responsive enhancements */
+  @media (max-width: 768px) {
+    .text-\[200px\] { font-size: 4rem; }
+    .text-9xl { font-size: 3rem; }
+    .text-4xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.25rem; }
+    .w-\[500px\] { width: 100%; }
+    .h-\[600px\] { height: auto; }
+    .pl-40 { padding-left: 1rem; }
   }
 </style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Enhanced GSAP Animations
+  function initIntroAnimations() {
+    // Main section entrance
+    gsap.fromTo(".intro-section", 
+      { 
+        opacity: 0,
+        y: 100,
+        rotationX: -15
+      },
+      { 
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        duration: 1.5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: "#introduction",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Sophisticated image animation with 3D effects
+    gsap.fromTo(".image-container", 
+      { 
+        opacity: 0, 
+        x: -150, 
+        rotationY: -45,
+        scale: 0.8
+      },
+      { 
+        opacity: 1, 
+        x: 0,
+        rotationY: 0,
+        scale: 1,
+        duration: 1.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".image-container",
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Image border animation
+    gsap.fromTo(".image-border", 
+      { 
+        opacity: 0,
+        scale: 0.5,
+        rotation: -180
+      },
+      { 
+        opacity: 1,
+        scale: 1.05,
+        rotation: 0,
+        duration: 2,
+        ease: "elastic.out(1, 0.3)",
+        delay: 0.5,
+        scrollTrigger: {
+          trigger: ".image-container",
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Title with typewriter effect simulation
+    gsap.fromTo(".about-title", 
+      { 
+        opacity: 0, 
+        y: -80, 
+        rotationX: -90,
+        scale: 0.8
+      },
+      {
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        scale: 1,
+        duration: 1.5,
+        ease: "back.out(1.7)",
+        scrollTrigger: {
+          trigger: ".about-title",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Content section with slide and rotate
+    gsap.fromTo(".content-section", 
+      { 
+        opacity: 0,
+        x: 150,
+        rotationY: 45,
+        scale: 0.9
+      },
+      { 
+        opacity: 1,
+        x: 0,
+        rotationY: 0,
+        scale: 1,
+        duration: 1.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".content-section",
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Staggered text animations with different effects
+    const textElements = [".intro-text", ".description-text", ".quote-text"];
+    
+    textElements.forEach((selector, index) => {
+      gsap.fromTo(selector, 
+        { 
+          opacity: 0,
+          y: 50,
+          x: index % 2 === 0 ? -30 : 30,
+          scale: 0.9,
+          rotationZ: index % 2 === 0 ? -5 : 5
+        },
+        {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          scale: 1,
+          rotationZ: 0,
+          duration: 1.2,
+          ease: "back.out(1.7)",
+          delay: index * 0.3,
+          scrollTrigger: {
+            trigger: selector,
+            start: "top 85%",
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+    });
+
+    // Name highlight with elastic bounce
+    gsap.fromTo(".name-highlight", 
+      { 
+        scale: 0.5,
+        rotation: -15,
+        opacity: 0
+      },
+      {
+        scale: 1,
+        rotation: 0,
+        opacity: 1,
+        duration: 2,
+        ease: "elastic.out(1, 0.5)",
+        delay: 1.2,
+        scrollTrigger: {
+          trigger: ".name-highlight",
+          start: "top 85%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Enhanced parallax for background text
+    gsap.fromTo(".bg-text", 
+      { 
+        yPercent: 0,
+        opacity: 0.1
+      },
+      {
+        yPercent: -30,
+        opacity: 0.05,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#introduction",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5
+        }
+      }
+    );
+
+    // Continuous floating animation for profile image
+    gsap.to(".profile-image", {
+      y: "+=20",
+      rotation: "+=3",
+      duration: 6,
+      ease: "power1.inOut",
+      yoyo: true,
+      repeat: -1,
+      delay: 2
+    });
+
+    // Interactive hover effects
+    setupHoverEffects();
+  }
+
+  function setupHoverEffects() {
+    const nameHighlight = document.querySelector('.name-highlight');
+    const profileImage = document.querySelector('.profile-image');
+    
+    if (nameHighlight) {
+      nameHighlight.addEventListener('mouseenter', () => {
+        gsap.to(nameHighlight, {
+          scale: 1.2,
+          rotation: 8,
+          duration: 0.4,
+          ease: "back.out(1.7)"
+        });
+      });
+
+      nameHighlight.addEventListener('mouseleave', () => {
+        gsap.to(nameHighlight, {
+          scale: 1,
+          rotation: 0,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      });
+    }
+
+    if (profileImage) {
+      profileImage.addEventListener('mouseenter', () => {
+        gsap.to(profileImage, {
+          scale: 1.1,
+          rotationY: 10,
+          z: 50,
+          duration: 0.6,
+          ease: "power2.out"
+        });
+        
+        gsap.to(".image-border", {
+          scale: 1.15,
+          opacity: 0.8,
+          duration: 0.6,
+          ease: "power2.out"
+        });
+      });
+
+      profileImage.addEventListener('mouseleave', () => {
+        gsap.to(profileImage, {
+          scale: 1,
+          rotationY: 0,
+          z: 0,
+          duration: 0.6,
+          ease: "power2.out"
+        });
+        
+        gsap.to(".image-border", {
+          scale: 1.05,
+          opacity: 1,
+          duration: 0.6,
+          ease: "power2.out"
+        });
+      });
+    }
+  }
+
+  // Magnetic cursor effect
+  function initMagneticEffect() {
+    let cursor = { x: 0, y: 0 };
+    let isHovering = false;
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.x = e.clientX;
+      cursor.y = e.clientY;
+    });
+
+    const introSection = document.querySelector('#introduction');
+    if (introSection) {
+      introSection.addEventListener('mouseenter', () => {
+        isHovering = true;
+      });
+      
+      introSection.addEventListener('mouseleave', () => {
+        isHovering = false;
+        gsap.to([".content-section", ".image-container"], {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          duration: 1,
+          ease: "power2.out"
+        });
+      });
+
+      gsap.ticker.add(() => {
+        if (isHovering && introSection) {
+          const rect = introSection.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          
+          const xMove = (cursor.x - centerX) * 0.03;
+          const yMove = (cursor.y - centerY) * 0.03;
+          
+          gsap.to(".content-section", {
+            x: xMove,
+            y: yMove,
+            rotation: xMove * 0.1,
+            duration: 0.8,
+            ease: "power2.out"
+          });
+          
+          gsap.to(".image-container", {
+            x: -xMove * 0.5,
+            y: -yMove * 0.5,
+            rotation: -xMove * 0.05,
+            duration: 0.8,
+            ease: "power2.out"
+          });
+        }
+      });
+    }
+  }
+
+  // Initialize all animations when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    initIntroAnimations();
+    initMagneticEffect();
+  });
+
+  // Performance optimizations
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      gsap.globalTimeline.pause();
+    } else {
+      gsap.globalTimeline.resume();
+    }
+  });
+
+  // Cleanup on page unload
+  window.addEventListener('beforeunload', () => {
+    ScrollTrigger.killAll();
+    gsap.killTweensOf("*");
+  });
+</script>

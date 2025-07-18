@@ -13,22 +13,56 @@ const rows = [
     'AWS', 'Azure', 'MongoDB', 'PostgreSQL', 'GraphQL', 'Redis',
   ],
 ];
+
+const gradients = [
+  'from-purple-500 to-pink-500',
+  'from-blue-500 to-cyan-500', 
+  'from-green-500 to-teal-500',
+  'from-orange-500 to-red-500',
+  'from-indigo-500 to-purple-500',
+  'from-pink-500 to-rose-500'
+];
 ---
 
-<div class="w-full h-[200px] flex flex-col relative overflow-hidden">
-  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent z-10 shine-animation"></div>
+<div class="w-full h-[200px] flex flex-col relative overflow-hidden perspective-1000" id="tech-banner">
+  <!-- Particle Background -->
+  <div class="absolute inset-0 z-0" id="particles-container"></div>
+  
+  <!-- Glowing Background Orbs -->
+  <div class="absolute inset-0 z-5">
+    <div class="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-full blur-xl animate-pulse"></div>
+    <div class="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-r from-blue-500/30 to-cyan-500/30 rounded-full blur-xl animate-pulse delay-1000"></div>
+    <div class="absolute top-1/2 left-1/2 w-24 h-24 bg-gradient-to-r from-green-500/30 to-teal-500/30 rounded-full blur-xl animate-pulse delay-500"></div>
+  </div>
+
+  <!-- Shine Effect -->
+  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent z-10 shine-animation"></div>
 
   {rows.map((items, rowIndex) => (
-    <div class="flex items-center h-1/3 z-20">
+    <div class="flex items-center h-1/3 z-20 tech-row" data-row={rowIndex}>
       <div
-        class={`flex gap-6 whitespace-nowrap ${rowIndex % 2 === 0 ? 'scroll-right' : 'scroll-left'}`}
+        class={`flex gap-6 whitespace-nowrap tech-scroll ${rowIndex % 2 === 0 ? 'scroll-right' : 'scroll-left'}`}
         style={`animation-duration: ${35 + rowIndex * 5}s;`}
       >
         {[...items, ...items].map((item, idx) => (
           <div
-            class="min-w-[120px] text-center text-white font-bold px-5 py-2 border-2 border-white/20 bg-white/10 shadow tech-item"
+            class="tech-item group relative min-w-[120px] text-center font-bold px-5 py-2 border-2 border-white/30 bg-white/10 shadow-lg backdrop-blur-sm cursor-pointer"
+            data-tech={item}
+            data-index={idx}
           >
-            {item}
+            <!-- Animated Border -->
+            <div class="absolute inset-0 rounded border-2 border-transparent bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 animate-border"></div>
+            
+            <!-- Glow Effect -->
+            <div class="absolute inset-0 rounded bg-gradient-to-r from-purple-500/0 to-pink-500/0 group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-all duration-300 blur-sm -z-10"></div>
+            
+            <!-- Text with gradient -->
+            <span class="relative z-10 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-pink-300 transition-all duration-300">
+              {item}
+            </span>
+            
+            <!-- Particle burst on hover -->
+            <div class="particle-burst absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100"></div>
           </div>
         ))}
       </div>
@@ -37,8 +71,16 @@ const rows = [
 </div>
 
 <style scoped>
+.perspective-1000 {
+  perspective: 1000px;
+}
+
 .shine-animation {
-  animation: shine 3s linear infinite;
+  animation: shine 4s ease-in-out infinite;
+}
+
+.tech-scroll {
+  transform-style: preserve-3d;
 }
 
 .scroll-left {
@@ -51,48 +93,292 @@ const rows = [
 
 .tech-item {
   will-change: transform;
-  transition: transform 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  border-radius: 8px;
+  /* Đảm bảo text hiển thị ngay từ đầu */
+  opacity: 1;
+  visibility: visible;
 }
 
-.tech-item:hover {
-  transform: translate3d(0, -4px, 0);
+.tech-item span {
+  /* Đảm bảo text có màu và hiển thị */
+  color: white;
+  font-weight: bold;
+  display: block;
+  position: relative;
+  z-index: 10;
+}
+
+.animate-border {
+  background: linear-gradient(45deg, 
+    #ff0000, #ff7700, #ffdd00, #00ff00, 
+    #0099ff, #6600ff, #ff0099, #ff0000
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 2s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 @keyframes shine {
   0% {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0) rotateY(-15deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
   }
   100% {
-    transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0) rotateY(15deg);
+    opacity: 0;
   }
 }
 
 @keyframes scroll-left {
   0% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-50%, 0, 0) rotateX(2deg);
   }
   100% {
-    transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0) rotateX(2deg);
   }
 }
 
 @keyframes scroll-right {
   0% {
-    transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0) rotateX(-2deg);
   }
   100% {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(-50%, 0, 0) rotateX(-2deg);
   }
 }
 
-/* Tối ưu performance cho mobile */
+/* Responsive */
 @media (max-width: 768px) {
   .shine-animation {
-    animation: none;
+    animation-duration: 6s;
   }
   
   .tech-item {
-    backdrop-filter: none;
+    backdrop-filter: blur(4px);
   }
 }
 </style>
+
+<script>
+import { gsap } from 'gsap';
+
+class TechBannerEffects {
+  banner: HTMLElement | null;
+  techItems: NodeListOf<Element>;
+  particlesContainer: HTMLElement | null;
+
+  constructor() {
+    this.banner = document.getElementById('tech-banner');
+    this.techItems = document.querySelectorAll('.tech-item');
+    this.particlesContainer = document.getElementById('particles-container');
+    this.init();
+  }
+
+  init() {
+    this.createParticles();
+    this.setupHoverEffects();
+    this.setupEntranceAnimation();
+    this.setupMagneticEffect();
+  }
+
+  createParticles() {
+    if (!this.particlesContainer) return;
+    
+    for (let i = 0; i < 50; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'absolute w-1 h-1 bg-white/30 rounded-full particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      
+      this.particlesContainer.appendChild(particle);
+      
+      // Animate particles
+      gsap.to(particle, {
+        x: (Math.random() - 0.5) * 200,
+        y: (Math.random() - 0.5) * 200,
+        scale: Math.random() * 0.5 + 0.5,
+        opacity: Math.random() * 0.5 + 0.3,
+        duration: Math.random() * 3 + 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "power2.inOut"
+      });
+    }
+  }
+
+  setupEntranceAnimation() {
+    // Đảm bảo text hiển thị ngay từ đầu
+    gsap.set('.tech-item', { opacity: 1, scale: 1 });
+    
+    // Animate tech rows entrance nhẹ nhàng hơn
+    gsap.from('.tech-row', {
+      y: 30,
+      opacity: 0.7,
+      rotationX: -5,
+      duration: 0.8,
+      stagger: 0.15,
+      ease: "power2.out"
+    });
+
+    // Animate tech items với hiệu ứng nhẹ nhàng
+    gsap.from('.tech-item', {
+      scale: 0.8,
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      stagger: {
+        amount: 1.5,
+        from: "start"
+      },
+      ease: "back.out(1.2)",
+      delay: 0.3
+    });
+  }
+
+  setupHoverEffects() {
+    this.techItems.forEach((item: Element, index: number) => {
+      const element = item as HTMLElement;
+      const tl = gsap.timeline({ paused: true });
+      
+      // Hover animation timeline
+      tl.to(element, {
+        scale: 1.1,
+        rotationY: 10,
+        z: 50,
+        duration: 0.3,
+        ease: "back.out(1.7)"
+      })
+      .to(element, {
+        boxShadow: "0 20px 40px rgba(139, 92, 246, 0.3)",
+        duration: 0.2
+      }, 0);
+
+      // Create particle burst effect
+      element.addEventListener('mouseenter', () => {
+        tl.play();
+        this.createParticleBurst(element);
+        
+        // Add glitch effect
+        gsap.to(element, {
+          textShadow: "2px 0 #ff0000, -2px 0 #00ffff",
+          duration: 0.1,
+          yoyo: true,
+          repeat: 3
+        });
+      });
+
+      element.addEventListener('mouseleave', () => {
+        tl.reverse();
+        
+        // Reset text shadow
+        gsap.to(element, {
+          textShadow: "none",
+          duration: 0.2
+        });
+      });
+
+      // Click effect
+      element.addEventListener('click', () => {
+        gsap.to(element, {
+          scale: 0.95,
+          duration: 0.1,
+          yoyo: true,
+          repeat: 1,
+          ease: "power2.inOut"
+        });
+
+        this.createRippleEffect(element);
+      });
+    });
+  }
+
+  setupMagneticEffect() {
+    this.techItems.forEach((item: Element) => {
+      const element = item as HTMLElement;
+      
+      element.addEventListener('mousemove', (e: MouseEvent) => {
+        const rect = element.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        gsap.to(element, {
+          x: x * 0.3,
+          y: y * 0.3,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+
+      element.addEventListener('mouseleave', () => {
+        gsap.to(element, {
+          x: 0,
+          y: 0,
+          duration: 0.5,
+          ease: "elastic.out(1, 0.3)"
+        });
+      });
+    });
+  }
+
+  createParticleBurst(element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < 8; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'fixed w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full pointer-events-none z-50';
+      particle.style.left = centerX + 'px';
+      particle.style.top = centerY + 'px';
+      document.body.appendChild(particle);
+
+      const angle = (i / 8) * Math.PI * 2;
+      const distance = 100;
+
+      gsap.to(particle, {
+        x: Math.cos(angle) * distance,
+        y: Math.sin(angle) * distance,
+        scale: 0,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.out",
+        onComplete: () => particle.remove()
+      });
+    }
+  }
+
+  createRippleEffect(element: HTMLElement) {
+    const ripple = document.createElement('div');
+    ripple.className = 'absolute inset-0 rounded border-2 border-purple-400/50 pointer-events-none';
+    element.appendChild(ripple);
+
+    gsap.fromTo(ripple, 
+      { scale: 0, opacity: 1 },
+      { 
+        scale: 2, 
+        opacity: 0, 
+        duration: 0.6,
+        ease: "power2.out",
+        onComplete: () => ripple.remove()
+      }
+    );
+  }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new TechBannerEffects();
+});
+</script>
