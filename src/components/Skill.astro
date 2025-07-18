@@ -16,19 +16,22 @@ const imgLoops = [
   <!-- 3D Depth Background Layers -->
   <div class="absolute inset-0 -z-20">
     {imgLoops.map((img, index) => {
-      // Tạo kích thước và vị trí cho 8 ảnh
       const sizes = [
-        { width: '300px', top: '10%', left: '5%' },
-        { width: '400px', top: '25%', left: '50%' },
-        { width: '280px', top: '5%', left: '40%' },
-        { width: '200px', top: '60%', left: '15%' },
-        { width: '240px', top: '45%', left: '80%' },
-        { width: '260px', top: '70%', left: '50%' },
-        { width: '320px', top: '5%', left: '75%' },
-        { width: '290px', top: '55%', left: '5%' }
+        { width: '300px', top: '10%', left: '5%', translateZ: '-50px', scale: '1.00' },
+        { width: '400px', top: '25%', left: '50%', translateZ: '-110px', scale: '1.06' },
+        { width: '280px', top: '5%', left: '40%', translateZ: '-170px', scale: '1.12' },
+        { width: '200px', top: '60%', left: '15%', translateZ: '-230px', scale: '1.18' },
+        { width: '240px', top: '45%', left: '80%', translateZ: '-290px', scale: '1.24' },
+        { width: '260px', top: '70%', left: '50%', translateZ: '-350px', scale: '1.30' },
+        { width: '320px', top: '5%', left: '75%', translateZ: '-410px', scale: '1.36' },
+        { width: '290px', top: '55%', left: '5%', translateZ: '-470px', scale: '1.42' }
       ];
       
       const currentSize = sizes[index];
+      
+      if (!currentSize) {
+        return null;
+      }
       
       return (
         <div 
@@ -39,7 +42,7 @@ const imgLoops = [
             height: 'auto',
             top: currentSize.top,
             left: currentSize.left,
-            transform: `translateZ(${-50 - (index * 60)}px) scale(${1 + (index * 0.06)})`,
+            transform: `translateZ(${currentSize.translateZ}) scale(${currentSize.scale})`,
             opacity: 0.8 - (index * 0.05),
             filter: `blur(${index * 0.5}px) brightness(${1.4 + (index * 0.06)}) contrast(1.4) saturate(1.2)`,
             mixBlendMode: 'normal'
@@ -153,7 +156,6 @@ const imgLoops = [
     perspective: 1200px;
     will-change: transform;
     backface-visibility: hidden;
-    /* Loại bỏ border-radius và box-shadow để có góc vuông */
   }
   
   .parallax-layer img {
@@ -244,7 +246,7 @@ const imgLoops = [
   /* Prevent layout shifts */
   img {
     content-visibility: auto;
-    contain-intrinsic-size: 640px 800px;
+    contain-intrinsic-size: 300px 400px;
   }
   
   /* Optimize transforms */
@@ -268,18 +270,10 @@ const imgLoops = [
       gap: 1.5rem;
     }
     
-    .h-\[800px\] {
-      height: 400px;
-    }
-    
-    .h-\[400px\] {
-      height: 300px;
-    }
-    
-    /* Đơn giản hóa parallax trên mobile */
     .parallax-layer {
       animation: none !important;
-      /* Loại bỏ border-radius và box-shadow trên mobile */
+      transform: scale(1.05);
+      transition: transform 0.3s ease-in-out;
     }
   }
   
@@ -297,7 +291,6 @@ const imgLoops = [
       width: 100%;
     }
     
-    /* Giảm kích thước layer trên mobile rất nhỏ */
     .parallax-layer {
       width: 90% !important;
       height: 60% !important;
@@ -307,7 +300,6 @@ const imgLoops = [
 </style>
 
 <script type="module">
-  // 3D Parallax Effect với throttling cho performance
   let ticking = false;
   
   function updateParallax() {
@@ -328,7 +320,6 @@ const imgLoops = [
         const scale = 1 + (index * 0.05);
         const opacity = Math.max(0.1, 0.3 - (index * 0.04));
         
-        // Sử dụng transform3d cho GPU acceleration
         layer.style.transform = `
           translate3d(0, ${yPos}px, ${-100 - (index * 50)}px) 
           scale(${scale})
@@ -347,7 +338,6 @@ const imgLoops = [
     }
   }
   
-  // Intersection Observer cho lazy loading và animations
   const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
@@ -357,46 +347,39 @@ const imgLoops = [
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('animate-in');
-        // Enable parallax khi section visible
-        if (entry.target.id === 'skill') {
+        if (entry.target.id === 'skill' && !window.__scrollListenerAdded) {
           window.addEventListener('scroll', requestTick, { passive: true });
+          window.__scrollListenerAdded = true;
         }
         observer.unobserve(entry.target);
       }
     });
   }, observerOptions);
   
-  // Initialize khi DOM ready
   document.addEventListener('DOMContentLoaded', () => {
     const skillSection = document.getElementById('skill');
     const skillCards = document.querySelectorAll('#skill [class*="col-"]');
     
     if (skillSection) {
       observer.observe(skillSection);
-      // Initial parallax setup
       updateParallax();
     }
     
     skillCards.forEach(card => observer.observe(card));
   });
   
-  // Cleanup observers và event listeners
-  window.addEventListener('beforeunload', () => {
-    observer.disconnect();
-    window.removeEventListener('scroll', requestTick);
-  });
-  
-  // Pause parallax khi tab không active để tiết kiệm battery
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       window.removeEventListener('scroll', requestTick);
+      window.__scrollListenerAdded = false;
     } else {
       const skillSection = document.getElementById('skill');
       if (skillSection) {
         const rect = skillSection.getBoundingClientRect();
         const isInView = rect.top < window.innerHeight && rect.bottom > 0;
-        if (isInView) {
+        if (isInView && !window.__scrollListenerAdded) {
           window.addEventListener('scroll', requestTick, { passive: true });
+          window.__scrollListenerAdded = true;
         }
       }
     }
